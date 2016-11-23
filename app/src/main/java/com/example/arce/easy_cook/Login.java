@@ -15,15 +15,14 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
-import com.mysql.jdbc.Statement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import cz.msebera.android.httpclient.Header;
 
 public class Login extends AppCompatActivity {
     EditText editEmail, editContraseña;
@@ -36,8 +35,6 @@ public class Login extends AppCompatActivity {
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
-    /*String url = "";
-    String parametros = "";*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,27 +59,55 @@ public class Login extends AppCompatActivity {
         btnSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ResultSet cdr = null;
-                Statement sentenciaSQL = null;
-                Conexion conecta = new Conexion();
-                String sentencia = "select * from registro_usuario;";
-
-                try {
-                    cdr = sentenciaSQL.executeQuery(sentencia);
-                    String nombre;
-                    while(cdr.next()) {
-                        nombre = cdr.getString("nombre");
-                        Toast toast = Toast.makeText(context, "Hola: " + nombre, duration);
-                        toast.show();
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                loginUser(v);
             }
         });
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    public void loginUser(View view){
+        String user = editEmail.getText().toString();
+        String passwd = editContraseña.getText().toString();
+        RequestParams params = new RequestParams();
+        if(user.compareTo("") != 0 && passwd.compareTo("") != 0){
+            params.put("usuario", user);
+            params.put("password", passwd);
+            invokeWS(params);
+        }else{
+            Toast.makeText(getApplicationContext(), "Por favor ingrese sus datos", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void invokeWS(RequestParams params){
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get("http://127.0.0.1:8080/RestEC/services/EasyCook/validaUsuario", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                //try {
+                    Toast.makeText(getApplicationContext(), "response: " + responseBody.toString(), Toast.LENGTH_LONG).show();
+                //}catch (JSONException e){
+
+                //}
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                if(statusCode == 404){
+                    Toast.makeText(getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
+                }
+                // When Http response code is '500'
+                else if(statusCode == 500){
+                    Toast.makeText(getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
+                }
+                // When Http response code other than 404, 500
+                else{
+                    Toast.makeText(getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     /**
