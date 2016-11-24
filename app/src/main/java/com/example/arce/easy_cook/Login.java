@@ -1,6 +1,5 @@
 package com.example.arce.easy_cook;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -22,14 +21,17 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class Login extends AppCompatActivity {
-    EditText editEmail, editContraseña;
+    EditText editEmail, editContrasena;
     Button btnSesion;
     TextView txtCuenta;
-    Context context = getApplicationContext();
-    int duration = Toast.LENGTH_SHORT;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -42,7 +44,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.login);
 
         editEmail = (EditText) findViewById(R.id.editEmail);
-        editContraseña = (EditText) findViewById(R.id.editContraseña);
+        editContrasena = (EditText) findViewById(R.id.editContrasena);
         btnSesion = (Button) findViewById(R.id.btnSesion);
         txtCuenta = (TextView) findViewById(R.id.txtCuenta);
 
@@ -67,47 +69,68 @@ public class Login extends AppCompatActivity {
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    public void loginUser(View view){
+    public void loginUser(View view) {
         String user = editEmail.getText().toString();
-        String passwd = editContraseña.getText().toString();
+        String passwd = editContrasena.getText().toString();
         RequestParams params = new RequestParams();
         if(user.compareTo("") != 0 && passwd.compareTo("") != 0){
             params.put("usuario", user);
             params.put("password", passwd);
-            invokeWS(params);
+            params.setUseJsonStreamer(true);
+
+            JSONObject jo = new JSONObject();
+            try {
+                jo.put("usuario", user);
+                jo.put("password", passwd);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            AsyncHttpClient ac = new AsyncHttpClient();
+            HttpEntity entity = null;
+            try {
+                entity = new StringEntity(jo.toString());
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+            //TODO: Cambiar por la ip de la PC que corre el servicio RestEC
+            String url = "http://192.168.0.13:8080/RestEC/services/EasyCook/validaUsuario";
+            ac.post(this, url, entity, "application/json", new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    try {
+                        //Status 200 quiere decir que se recibio respuesta
+                        if (statusCode == 200) {
+                            if(responseBody != null && responseBody.length > 0) {
+                                JSONObject res = new JSONObject(new String(responseBody));
+                                Object valido = res.get("userValido");
+                                //si el usuario es valido lo redireccionamos al Activity principal
+                                if(valido.toString().compareTo("true") == 0){
+                                    Intent abreCuenta = new Intent(Login.this, Cuenta.class);
+                                    startActivity(abreCuenta);
+                                }else {
+                                    Toast.makeText(getApplicationContext(), "Usuario o password incorrecto!", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+                        }
+                    } catch (Exception e) {
+                        //e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "Error" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Toast.makeText(getApplicationContext(), "Error onFailure", Toast.LENGTH_LONG).show();
+                }
+            });
+
         }else{
             Toast.makeText(getApplicationContext(), "Por favor ingrese sus datos", Toast.LENGTH_LONG).show();
         }
-    }
-
-    public void invokeWS(RequestParams params){
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get("http://127.0.0.1:8080/RestEC/services/EasyCook/validaUsuario", params, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                //try {
-                    Toast.makeText(getApplicationContext(), "response: " + responseBody.toString(), Toast.LENGTH_LONG).show();
-                //}catch (JSONException e){
-
-                //}
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                if(statusCode == 404){
-                    Toast.makeText(getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
-                }
-                // When Http response code is '500'
-                else if(statusCode == 500){
-                    Toast.makeText(getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
-                }
-                // When Http response code other than 404, 500
-                else{
-                    Toast.makeText(getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
     }
 
     /**
