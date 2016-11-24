@@ -1,6 +1,5 @@
 package com.example.arce.easy_cook;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -15,29 +14,29 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
-import com.mysql.jdbc.Statement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.UnsupportedEncodingException;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class Login extends AppCompatActivity {
-    EditText editEmail, editContraseña;
+    EditText editEmail, editContrasena;
     Button btnSesion;
     TextView txtCuenta;
-    Context context = getApplicationContext();
-    int duration = Toast.LENGTH_SHORT;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
-    /*String url = "";
-    String parametros = "";*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +44,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.login);
 
         editEmail = (EditText) findViewById(R.id.editEmail);
-        editContraseña = (EditText) findViewById(R.id.editContraseña);
+        editContrasena = (EditText) findViewById(R.id.editContrasena);
         btnSesion = (Button) findViewById(R.id.btnSesion);
         txtCuenta = (TextView) findViewById(R.id.txtCuenta);
 
@@ -62,27 +61,76 @@ public class Login extends AppCompatActivity {
         btnSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ResultSet cdr = null;
-                Statement sentenciaSQL = null;
-                Conexion conecta = new Conexion();
-                String sentencia = "select * from registro_usuario;";
-
-                try {
-                    cdr = sentenciaSQL.executeQuery(sentencia);
-                    String nombre;
-                    while(cdr.next()) {
-                        nombre = cdr.getString("nombre");
-                        Toast toast = Toast.makeText(context, "Hola: " + nombre, duration);
-                        toast.show();
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                loginUser(v);
             }
         });
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    public void loginUser(View view) {
+        String user = editEmail.getText().toString();
+        String passwd = editContrasena.getText().toString();
+        RequestParams params = new RequestParams();
+        if(user.compareTo("") != 0 && passwd.compareTo("") != 0){
+            params.put("usuario", user);
+            params.put("password", passwd);
+            params.setUseJsonStreamer(true);
+
+            JSONObject jo = new JSONObject();
+            try {
+                jo.put("usuario", user);
+                jo.put("password", passwd);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            AsyncHttpClient ac = new AsyncHttpClient();
+            HttpEntity entity = null;
+            try {
+                entity = new StringEntity(jo.toString());
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+            //TODO: Cambiar por la ip de la PC que corre el servicio RestEC
+            String url = "http://192.168.0.13:8080/RestEC/services/EasyCook/validaUsuario";
+            ac.post(this, url, entity, "application/json", new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    try {
+                        //Status 200 quiere decir que se recibio respuesta
+                        if (statusCode == 200) {
+                            if(responseBody != null && responseBody.length > 0) {
+                                JSONObject res = new JSONObject(new String(responseBody));
+                                Object valido = res.get("userValido");
+                                //si el usuario es valido lo redireccionamos al Activity principal
+                                if(valido.toString().compareTo("true") == 0){
+                                    Intent abreCuenta = new Intent(Login.this, Cuenta.class);
+                                    startActivity(abreCuenta);
+                                }else {
+                                    Toast.makeText(getApplicationContext(), "Usuario o password incorrecto!", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+                        }
+                    } catch (Exception e) {
+                        //e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "Error" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Toast.makeText(getApplicationContext(), "Error onFailure", Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }else{
+            Toast.makeText(getApplicationContext(), "Por favor ingrese sus datos", Toast.LENGTH_LONG).show();
+        }
     }
 
     /**

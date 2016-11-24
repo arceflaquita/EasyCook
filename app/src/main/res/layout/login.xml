@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:hint="email"
+        android:hint="usuario"
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/editEmail" />
@@ -25,10 +25,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:hint="contraseña"
+        android:hint="password"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/editContraseña" />
+        android:id="@+id/editContrasena" />
 
     <Button
         android:text="Iniciar sesión"
