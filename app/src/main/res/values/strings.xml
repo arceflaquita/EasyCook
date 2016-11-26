@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Easy-Cook</string>
+    <string name="search_hint">Buscar receta...</string>
 </resources>
