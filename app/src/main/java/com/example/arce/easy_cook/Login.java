@@ -1,12 +1,17 @@
 package com.example.arce.easy_cook;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,7 +100,7 @@ public class Login extends AppCompatActivity {
             }
 
             //TODO: Cambiar por la ip de la PC que corre el servicio RestEC
-            String url = "http://192.168.0.13:8080/RestEC/services/EasyCook/validaUsuario";
+            String url = "http://192.168.0.14:8080/RestEC/services/EasyCook/validaUsuario";
             ac.post(this, url, entity, "application/json", new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -107,7 +112,7 @@ public class Login extends AppCompatActivity {
                                 Object valido = res.get("userValido");
                                 //si el usuario es valido lo redireccionamos al Activity principal
                                 if(valido.toString().compareTo("true") == 0){
-                                    Intent abreCuenta = new Intent(Login.this, Cuenta.class);
+                                    Intent abreCuenta = new Intent(Login.this, Busqueda.class);
                                     startActivity(abreCuenta);
                                 }else {
                                     Toast.makeText(getApplicationContext(), "Usuario o password incorrecto!", Toast.LENGTH_LONG).show();
