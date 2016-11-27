@@ -24,9 +24,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:hint="Apellidos"
+        android:hint="Apellido Paterno"
         android:ems="10"
-        android:id="@+id/editApellidos" />
+        android:id="@+id/editPaterno" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="Apellido Materno"
+        android:ems="10"
+        android:id="@+id/editMaterno" />
 
     <EditText
         android:layout_width="match_parent"
@@ -43,6 +51,14 @@
         android:hint="Contraseña"
         android:ems="10"
         android:id="@+id/editPass" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="Repetir Contraseña"
+        android:ems="10"
+        android:id="@+id/editRepPass" />
 
 
     <LinearLayout

@@ -36,6 +36,7 @@ public class Login extends AppCompatActivity {
     EditText editEmail, editContrasena;
     Button btnSesion;
     TextView txtCuenta;
+    String urlREST = "";
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -48,6 +49,9 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
+        //TODO: Cambiar por la ip de la PC que corre el servicio RestEC en archivo strings.xml
+        urlREST = this.getResources().getString(R.string.urlREST);
+
         editEmail = (EditText) findViewById(R.id.editEmail);
         editContrasena = (EditText) findViewById(R.id.editContrasena);
         btnSesion = (Button) findViewById(R.id.btnSesion);
@@ -59,8 +63,6 @@ public class Login extends AppCompatActivity {
                 Intent abreCuenta = new Intent(Login.this, Cuenta.class);
                 startActivity(abreCuenta);
             }
-
-
         });
 
         btnSesion.setOnClickListener(new View.OnClickListener() {
@@ -77,20 +79,14 @@ public class Login extends AppCompatActivity {
     public void loginUser(View view) {
         String user = editEmail.getText().toString();
         String passwd = editContrasena.getText().toString();
-        RequestParams params = new RequestParams();
         if(user.compareTo("") != 0 && passwd.compareTo("") != 0){
-            params.put("usuario", user);
-            params.put("password", passwd);
-            params.setUseJsonStreamer(true);
-
             JSONObject jo = new JSONObject();
             try {
-                jo.put("usuario", user);
+                jo.put("correo", user);
                 jo.put("password", passwd);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             AsyncHttpClient ac = new AsyncHttpClient();
             HttpEntity entity = null;
             try {
@@ -100,7 +96,7 @@ public class Login extends AppCompatActivity {
             }
 
             //TODO: Cambiar por la ip de la PC que corre el servicio RestEC
-            String url = "http://192.168.0.14:8080/RestEC/services/EasyCook/validaUsuario";
+            String url = urlREST + "/validaUsuario";
             ac.post(this, url, entity, "application/json", new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -112,8 +108,8 @@ public class Login extends AppCompatActivity {
                                 Object valido = res.get("userValido");
                                 //si el usuario es valido lo redireccionamos al Activity principal
                                 if(valido.toString().compareTo("true") == 0){
-                                    Intent abreCuenta = new Intent(Login.this, Busqueda.class);
-                                    startActivity(abreCuenta);
+                                    Intent busq = new Intent(Login.this, Busqueda.class);
+                                    startActivity(busq);
                                 }else {
                                     Toast.makeText(getApplicationContext(), "Usuario o password incorrecto!", Toast.LENGTH_LONG).show();
                                 }
@@ -174,22 +170,3 @@ public class Login extends AppCompatActivity {
         client.disconnect();
     }
 }
-
-    /*private class SolicitaDatos extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
-
-
-
-                return conexion.postDatos(urls[0], parametros);
-
-
-        }
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(String result) {
-            textView.setText(result);
-        }
-    }
-}
-*/
