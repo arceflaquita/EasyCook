@@ -50,6 +50,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.login);
 
         //TODO: Cambiar por la ip de la PC que corre el servicio RestEC en archivo strings.xml
+        //ejecutar ipconfig para ver la ip de la maquina
         urlREST = this.getResources().getString(R.string.urlREST);
 
         editEmail = (EditText) findViewById(R.id.editEmail);

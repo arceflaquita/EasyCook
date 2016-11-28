@@ -1,18 +1,21 @@
 package com.example.arce.easy_cook;
 
 import android.app.Dialog;
+import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,21 +23,40 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class Busqueda extends AppCompatActivity {
     private static final int REQUEST_CODE = 1234;
-    TextView Speech;
+    //TextView Speech;
+    ListView listRec;
+    String urlREST = "";
+    List<String> recs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.busqueda);
-        Speech = (TextView)findViewById(R.id.speech);
+        //TODO: Cambiar por la ip de la PC que corre el servicio RestEC en archivo strings.xml
+        urlREST = this.getResources().getString(R.string.urlREST);
+        //Speech = (TextView)findViewById(R.id.speech);
+        listRec = (ListView) findViewById(R.id.listRec);
         handleIntent(getIntent());
     }
-
 
     public  boolean isConnected()
     {
@@ -60,6 +82,21 @@ public class Busqueda extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_ins_recetas:
+                {
+                    Intent rec = new Intent(Busqueda.this, InsReceta.class);
+                    startActivity(rec);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     protected void onNewIntent(Intent intent) {
         handleIntent(intent);
     }
@@ -67,7 +104,109 @@ public class Busqueda extends AppCompatActivity {
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            Speech.setText("Buscando receta: " + query);
+            //Speech.setText("Buscando receta: " + query);
+
+            JSONObject jo = new JSONObject();
+            try {
+                jo.put("nombre", query);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            AsyncHttpClient ac = new AsyncHttpClient();
+            HttpEntity entity = null;
+            try {
+                entity = new StringEntity(jo.toString());
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+            //TODO: Cambiar por la ip de la PC que corre el servicio RestEC
+            String url = urlREST + "/consReceta";
+            ac.post(this, url, entity, "application/json", new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    try {
+                        //Status 200 quiere decir que se recibio respuesta
+                        if (statusCode == 200) {
+                            if(responseBody != null && responseBody.length > 0) {
+                                JSONArray res = new JSONArray(new String(responseBody));
+                                //Toast.makeText(getApplicationContext(), res.toString(), Toast.LENGTH_LONG).show();
+                                if(res.length() == 0){
+                                    Toast.makeText(getApplicationContext(), "No se encontraron recetas!", Toast.LENGTH_LONG).show();
+                                    return;
+                                }
+                                recs = new ArrayList<String>();
+                                for(int i=0; i < res.length(); i++){
+                                    JSONObject obj = new JSONObject(res.get(i).toString());
+                                    recs.add(obj.get("nombre").toString());
+                                    //Toast.makeText(getApplicationContext(), obj.get("nombre").toString(), Toast.LENGTH_LONG).show();
+                                }
+
+                                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(),
+                                        R.layout.list_recs, R.id.ItemName, recs);
+
+                                listRec.setAdapter(arrayAdapter);
+                                listRec.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        String selRec = recs.get(position);
+                                        //Toast.makeText(getApplicationContext(), "Receta Seleccionada : " + selRec,   Toast.LENGTH_LONG).show();
+
+                                        String yURL = "https://www.googleapis.com/youtube/v3/search?part=id&key=AIzaSyC83ctBM8zQz4tEH0RPboDnR9qkWH1LCZA&maxResults=1&q=" + selRec.replace(" ", "%20");
+                                        AsyncHttpClient yac =  new AsyncHttpClient();
+                                        yac.get(yURL, new AsyncHttpResponseHandler() {
+                                            @Override
+                                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                                if (statusCode == 200) {
+                                                    if(responseBody != null && responseBody.length > 0) {
+                                                        try {
+                                                            JSONObject yvid = new JSONObject(new String(responseBody));
+                                                            JSONArray yvarr = new JSONArray(yvid.getString("items"));
+                                                            JSONObject youvid = yvarr.getJSONObject(0);
+                                                            String video = youvid.getJSONObject("id").get("videoId").toString();
+
+                                                            String youtubeURL = "https://www.youtube.com/watch?v=" + video;
+                                                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeURL));
+                                                            startActivity(browserIntent);
+                                                            //Toast.makeText(getApplicationContext(), video, Toast.LENGTH_LONG).show();
+                                                        } catch (JSONException e) {
+                                                            //e.printStackTrace();
+                                                            Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                                        }
+                                                    }else{
+                                                        Toast.makeText(getApplicationContext(), "No se encontraron videos!", Toast.LENGTH_LONG).show();
+                                                    }
+                                                }else{
+                                                    Toast.makeText(getApplicationContext(), "No se encontraron videos!", Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                            @Override
+                                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                                Toast.makeText(getApplicationContext(), "Error Youtube", Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+                                    }
+                                });
+
+                            }else{
+                                Toast.makeText(getApplicationContext(), "No se encontraron recetas!", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+                        }
+                    } catch (Exception e) {
+                        //e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "Error" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Toast.makeText(getApplicationContext(), "Error onFailure", Toast.LENGTH_LONG).show();
+                }
+            });
+
+
         }
     }
 }
