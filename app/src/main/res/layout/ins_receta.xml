@@ -19,21 +19,23 @@
     android:ems="10"
     android:id="@+id/editNombreRec" />
 
-    <EditText
+    <TextView
+        android:id="@+id/tv_tipocomida"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Modo de preparacion"
-        android:inputType="textPersonName"
-        android:ems="50"
-        android:maxLines="5"
-        android:scrollbars="vertical"
-        android:id="@+id/editModoPrep" />
+        android:text="Tipo de Comida" />
 
     <Spinner
         android:id="@+id/spnTipoComida"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10" />
+
+    <TextView
+        android:id="@+id/tv_porciones"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Numero de Personas" />
 
     <Spinner
         android:id="@+id/spnPorciones"
@@ -44,8 +46,62 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Ingredientes:"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editIngrediente" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <Button
+        android:text="Agregar"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:id="@+id/btnAgregar" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listIng"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:drawSelectorOnTop="false"
+        android:background="@color/colorAccent"
+        android:padding="5dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Modo de preparacion"
+        android:inputType="textMultiLine"
+        android:ems="50"
+        android:lines="8"
+        android:minLines="6"
+        android:maxLines="15"
+        android:gravity="top|left"
+        android:scrollbars="vertical"
+        android:id="@+id/editModoPrep" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:hint="URL Video"
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/editVideo" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <Button
+        android:text="Guardar Receta"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/btnAgregarRec" />
+    </LinearLayout>
 </LinearLayout>
+
+
