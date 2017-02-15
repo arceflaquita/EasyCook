@@ -11,6 +11,6 @@
         android:id="@+id/listRec"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/colorAccent" />
+        android:background="@drawable/user" />
 
 </LinearLayout>
