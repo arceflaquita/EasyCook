@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED"/>
 
     <application
         android:allowBackup="true"
@@ -21,6 +23,7 @@
         <activity android:name=".Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -44,7 +47,8 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
-        <activity android:name=".InsReceta"></activity>
+        <activity android:name=".InsReceta" />
+        <activity android:name=".MenuUser"></activity>
     </application>
 
 </manifest>

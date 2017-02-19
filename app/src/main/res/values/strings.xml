@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Easy-Cook</string>
     <string name="search_hint">Buscar receta...</string>
+    <!--<string name="urlREST">http://100.78.86.159:8080/RestEC/services/EasyCook</string>-->
     <string name="urlREST">http://192.168.0.14:8080/RestEC/services/EasyCook</string>
-    <!--<string name="urlREST">http://192.168.43.194:8080/RestEC/services/EasyCook</string>-->
 
     <string-array name="tipo_comida_arr">
         <item>Desayuno</item>
@@ -20,4 +20,7 @@
         <item>7</item>
         <item>8</item>
     </string-array>
+
+    <string name="contentDescriptionImagenSet">This is where the picture is going to assign</string>
+    <string name="contentDescriptionButtonImage">This is a button with an image that open the camera or galery</string>
 </resources>

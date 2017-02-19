@@ -109,7 +109,7 @@ public class Login extends AppCompatActivity {
                                 Object valido = res.get("userValido");
                                 //si el usuario es valido lo redireccionamos al Activity principal
                                 if(valido.toString().compareTo("true") == 0){
-                                    Intent busq = new Intent(Login.this, Busqueda.class);
+                                    Intent busq = new Intent(Login.this, MenuUser.class);
                                     startActivity(busq);
                                 }else {
                                     Toast.makeText(getApplicationContext(), "Usuario o password incorrecto!", Toast.LENGTH_LONG).show();
