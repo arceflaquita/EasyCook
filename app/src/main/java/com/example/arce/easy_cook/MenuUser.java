@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 93ce65fe1f48687722dc1303fa919e07c9409217
 package com.example.arce.easy_cook;
 
 import android.content.Intent;

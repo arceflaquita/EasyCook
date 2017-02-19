@@ -14,16 +14,17 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/user"
     tools:context="com.example.arce.easy_cook.InsReceta"
     android:orientation="vertical">
 
     <EditText
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="Nombre de receta"
-    android:inputType="textPersonName"
-    android:ems="10"
-    android:id="@+id/editNombreRec" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre de receta"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editNombreRec" />
 
     <TextView
         android:id="@+id/tv_tipocomida"
@@ -61,12 +62,12 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <Button
-        android:text="Agregar"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:id="@+id/btnAgregar" />
+        <Button
+            android:text="Agregar"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:id="@+id/btnAgregar" />
     </LinearLayout>
 
     <ListView
@@ -126,12 +127,12 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <Button
-        android:text="Guardar Receta"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:id="@+id/btnAgregarRec" />
+        <Button
+            android:text="Guardar Receta"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/btnAgregarRec" />
     </LinearLayout>
 </LinearLayout>
 </ScrollView>

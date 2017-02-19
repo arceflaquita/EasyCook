@@ -10,7 +10,8 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:weightSum="1">
 
     <EditText
         android:layout_width="match_parent"
@@ -19,6 +20,8 @@
         android:hint="usuario"
         android:inputType="textPersonName"
         android:ems="10"
+        android:textColor="#FF5722"
+        android:textSize="20dp"
         android:id="@+id/editEmail" />
 
     <EditText
@@ -27,6 +30,7 @@
         android:textAlignment="center"
         android:hint="password"
         android:inputType="textPassword"
+        android:textColor="#FF5722"
         android:ems="10"
         android:id="@+id/editContrasena" />
 
@@ -40,10 +44,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="19dp"
         android:textAlignment="center"
-        android:textColor="#fff"
+        android:textColor="#F50057"
         android:text="¿No tiene una cuenta? Cree una."
-        android:ems="10"
-        android:id="@+id/txtCuenta" />
+        android:ems="30"
+        android:textSize="18dp"
+        android:id="@+id/txtCuenta"
+        android:layout_weight="0.09" />
 </LinearLayout>
