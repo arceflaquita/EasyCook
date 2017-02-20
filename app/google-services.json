@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "78866178344",
+    "firebase_url": "https://easy-cook-ebab0.firebaseio.com",
+    "project_id": "easy-cook-ebab0",
+    "storage_bucket": "easy-cook-ebab0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:78866178344:android:7a26494d9bddebb7",
+        "android_client_info": {
+          "package_name": "com.example.arce.easy_cook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "78866178344-qiteacqili35nuvl2ua0js6s5cbg352g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.arce.easy_cook",
+            "certificate_hash": "EC5D845BF1446A5ABEF778FD2FF4455931D987FC"
+          }
+        },
+        {
+          "client_id": "78866178344-i8na3bpfmhbja6qk0p06g294ocjo7r4j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeYjXbeME1uVrIXWKhRUkV2ZUZASoNtyc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "78866178344-i8na3bpfmhbja6qk0p06g294ocjo7r4j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

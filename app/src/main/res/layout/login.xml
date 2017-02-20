@@ -11,7 +11,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:weightSum="1">
+    android:weightSum="1"
+    tools:context="com.example.arce.easy_cook.Login">
 
     <EditText
         android:layout_width="match_parent"
@@ -52,4 +53,15 @@
         android:textSize="18dp"
         android:id="@+id/txtCuenta"
         android:layout_weight="0.09" />
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/fb_log_btn"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"/>
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/SignInButton"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+
+
 </LinearLayout>

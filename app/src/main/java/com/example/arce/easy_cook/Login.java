@@ -1,53 +1,116 @@
 package com.example.arce.easy_cook;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
-public class Login extends AppCompatActivity {
-    EditText editEmail, editContrasena;
+public class Login extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener{
+    private LoginButton loginButton;
+    private CallbackManager callbackManager;
+    private EditText editEmail, editContrasena;
     Button btnSesion;
     TextView txtCuenta;
     String urlREST = "";
+    public static final int SIGN_IN_CODE=777;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+    private SignInButton signInButton;
+    private GoogleApiClient googleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.login);
+
+
+        //componente de Google
+        GoogleSignInOptions gso=new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail().build();
+        googleApiClient=new GoogleApiClient.Builder(this)
+                .enableAutoManage(this,this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
+                .build();
+        signInButton=(SignInButton)findViewById(R.id.SignInButton);
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent= Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+                startActivityForResult(intent,SIGN_IN_CODE);
+            }
+        });
+
+
+        //Componentes de Facebook
+        loginButton=(LoginButton)findViewById(R.id.fb_log_btn) ;
+
+
+        callbackManager=CallbackManager.Factory.create();
+
+       loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                    goMainScreen();
+            }
+
+            @Override
+            public void onCancel() {
+                Toast.makeText(getApplicationContext(),R.string.cancel_login,Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(getApplicationContext(),R.string.error_login,Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
         //TODO: Cambiar por la ip de la PC que corre el servicio RestEC en archivo strings.xml
         //ejecutar ipconfig para ver la ip de la maquina
@@ -75,6 +138,30 @@ public class Login extends AppCompatActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    private void goMainScreen() {
+        Intent intent=new Intent(Login.this,MenuUser.class);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+      //  super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode,resultCode,data);
+
+        if(requestCode==SIGN_IN_CODE){
+            GoogleSignInResult result=Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSingnInResult(result);
+        }
+    }
+
+    private void handleSingnInResult(GoogleSignInResult result) {
+    if(result.isSuccess()){
+        goMainScreen();
+    }else{
+        Toast.makeText(this,R.string.error_login,Toast.LENGTH_SHORT).show();
+    }
     }
 
     public void loginUser(View view) {
@@ -109,7 +196,7 @@ public class Login extends AppCompatActivity {
                                 Object valido = res.get("userValido");
                                 //si el usuario es valido lo redireccionamos al Activity principal
                                 if(valido.toString().compareTo("true") == 0){
-                                    Intent busq = new Intent(Login.this, Busqueda.class);
+                                    Intent busq = new Intent(Login.this, MenuUser.class);
                                     startActivity(busq);
                                 }else {
                                     Toast.makeText(getApplicationContext(), "Usuario o password incorrecto!", Toast.LENGTH_LONG).show();
@@ -169,5 +256,10 @@ public class Login extends AppCompatActivity {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }

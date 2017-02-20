@@ -1,7 +1,12 @@
 <resources>
+    <string name="facebook_app_id">742603609222918</string>
+
+    <string name="fb_login_protocol_scheme">fbAPP_ID</string>
     <string name="app_name">Easy-Cook</string>
     <string name="search_hint">Buscar receta...</string>
-    <string name="urlREST">http://192.168.0.14:8080/RestEC/services/EasyCook</string>
+    <string name="urlREST">http://192.168.0.3:8080/RestEC/services/EasyCook</string>
+    <string name="cancel_login">Sesión Cancelada</string>
+    <string name="error_login">Ocurrió un error al ingresar</string>
     <!--<string name="urlREST">http://192.168.43.194:8080/RestEC/services/EasyCook</string>-->
 
     <string-array name="tipo_comida_arr">

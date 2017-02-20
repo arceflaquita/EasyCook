@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.facebook.AccessToken;
+
 public class MenuUser extends AppCompatActivity {
     Button btnBusquedaEspecifica;
     Button btnAgregar;
@@ -18,6 +20,17 @@ public class MenuUser extends AppCompatActivity {
         btnBusquedaEspecifica= (Button)findViewById(R.id.btnBusEspecifica);
         btnAgregar= (Button)findViewById(R.id.btnAgregar);
         btnBusqueda= (Button)findViewById(R.id.btnBusqueda);
+
+        if(AccessToken.getCurrentAccessToken()==null){
+            goLoginScreen();
+        }
+
+    }
+
+    private void goLoginScreen() {
+        Intent intent=new Intent(this,Login.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     public void Buscar(View boton) {
