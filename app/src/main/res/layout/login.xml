@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/easy"
     android:gravity="center"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:weightSum="1"
     tools:context="com.example.arce.easy_cook.Login">
+
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="99dp"
+        app:srcCompat="@drawable/easy"
+        android:id="@+id/imageView4" />
 
     <EditText
         android:layout_width="match_parent"
@@ -41,6 +46,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/btnSesion" />
 
+
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,16 +59,55 @@
         android:ems="30"
         android:textSize="18dp"
         android:id="@+id/txtCuenta"
-        android:layout_weight="0.09" />
+        android:layout_weight="0.21" />
 
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/fb_log_btn"
+    <TableLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"/>
+        android:weightSum="1">
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/fb_log_btn"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="0.63" />
+
+
+
+
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"/>
+        <com.twitter.sdk.android.core.identity.TwitterLoginButton
+            android:id="@+id/tw_log_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"/>
         <com.google.android.gms.common.SignInButton
             android:id="@+id/SignInButton"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"/>
+            android:layout_width="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"/>
+    </TableLayout>
 
 
 </LinearLayout>

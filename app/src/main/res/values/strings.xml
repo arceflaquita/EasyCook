@@ -2,7 +2,7 @@
     <string name="app_name">Easy-Cook</string>
     <string name="search_hint">Buscar receta...</string>
     <!--<string name="urlREST">http://100.78.86.159:8080/RestEC/services/EasyCook</string>-->
-    <string name="urlREST">http://192.168.0.14:8080/RestEC/services/EasyCook</string>
+    <string name="urlREST">http://192.168.0.3:8080/RestEC/services/EasyCook</string>
 
     <string-array name="tipo_comida_arr">
         <item>Desayuno</item>
@@ -23,4 +23,9 @@
 
     <string name="contentDescriptionImagenSet">This is where the picture is going to assign</string>
     <string name="contentDescriptionButtonImage">This is a button with an image that open the camera or galery</string>
+    <string name="cancel_login">Se canselo la  sesión</string>
+    <string name="error_login">Error de inicio de sesión</string>
+    <string name="facebook_app_id">742603609222918</string>
+    <string name="twitter_consumer_key">M6cxGI9rLBvxioRr2Oj7745J5</string>
+    <string name="twitter_consumer_secret">4XnIHc1yFJlg0Fr51lrro67BtMJ4Qo5hIOFJLIfOa08MR1WmgQ</string>
 </resources>

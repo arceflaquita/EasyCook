@@ -1,5 +1,6 @@
 package com.example.arce.easy_cook;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -32,6 +33,14 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.Status;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,15 +54,20 @@ import java.util.concurrent.TimeUnit;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.entity.StringEntity;
+import io.fabric.sdk.android.Fabric;
 
 public class Login extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener{
     private LoginButton loginButton;
+    private TwitterLoginButton loginButtonTw;
     private CallbackManager callbackManager;
     private EditText editEmail, editContrasena;
     Button btnSesion;
     TextView txtCuenta;
     String urlREST = "";
     public static final int SIGN_IN_CODE=777;
+    private static final String key="M6cxGI9rLBvxioRr2Oj7745J5";
+    private static final String secret="4XnIHc1yFJlg0Fr51lrro67BtMJ4Qo5hIOFJLIfOa08MR1WmgQ";
+
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -66,9 +80,28 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        TwitterAuthConfig authConfig=new TwitterAuthConfig(key,secret);
+        Fabric.with(this,new Twitter(authConfig));
         setContentView(R.layout.login);
 
+        //componentes de twitter
+
+        loginButtonTw = (TwitterLoginButton) findViewById(R.id.tw_log_btn);
+
+        loginButtonTw.setCallback(new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+
+                goMainScreen();
+                finish();
+
+            }
+
+            @Override
+            public void failure(TwitterException exception) {
+                Toast.makeText(getApplicationContext(),R.string.cancel_login,Toast.LENGTH_SHORT).show();
+            }
+        });
 
         //componente de Google
         GoogleSignInOptions gso=new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -147,13 +180,16 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-      //  super.onActivityResult(requestCode, resultCode, data);
+       // super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode,resultCode,data);
 
         if(requestCode==SIGN_IN_CODE){
             GoogleSignInResult result=Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSingnInResult(result);
         }
+
+            loginButtonTw.onActivityResult(requestCode, resultCode, data);
+
     }
 
     private void handleSingnInResult(GoogleSignInResult result) {

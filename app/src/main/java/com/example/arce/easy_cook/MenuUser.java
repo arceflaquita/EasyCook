@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> 93ce65fe1f48687722dc1303fa919e07c9409217
 package com.example.arce.easy_cook;
 
 import android.content.Intent;
@@ -11,23 +7,28 @@ import android.view.View;
 import android.widget.Button;
 
 import com.facebook.AccessToken;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterSession;
+
+import io.fabric.sdk.android.Fabric;
 
 public class MenuUser extends AppCompatActivity {
     Button btnBusquedaEspecifica;
     Button btnAgregar;
     Button btnBusqueda;
+
+    private TwitterSession twitterSession;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_user);
 
+
         btnBusquedaEspecifica= (Button)findViewById(R.id.btnBusEspecifica);
         btnAgregar= (Button)findViewById(R.id.btnAgregar);
         btnBusqueda= (Button)findViewById(R.id.btnBusqueda);
-
-        if(AccessToken.getCurrentAccessToken()==null){
-            goLoginScreen();
-        }
 
     }
 
