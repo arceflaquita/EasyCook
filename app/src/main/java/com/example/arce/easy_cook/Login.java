@@ -1,19 +1,24 @@
 package com.example.arce.easy_cook;
 
+import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.appindexing.Action;
@@ -24,7 +29,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.twitter.sdk.android.Twitter;
@@ -33,12 +47,17 @@ import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpEntity;
@@ -53,6 +72,7 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
     Button btnSesion;
     TextView txtCuenta;
     String urlREST = "";
+
     public static final int SIGN_IN_CODE=777;
     private static final String key="M6cxGI9rLBvxioRr2Oj7745J5";
     private static final String secret="4XnIHc1yFJlg0Fr51lrro67BtMJ4Qo5hIOFJLIfOa08MR1WmgQ";
@@ -65,6 +85,9 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
     private GoogleApiClient client;
     private SignInButton signInButton;
     private GoogleApiClient googleApiClient;
+    private FirebaseAuth firebaseAuth;
+    private AuthCredential credential;
+    private FirebaseAuth.AuthStateListener firebaseAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +95,7 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
         TwitterAuthConfig authConfig=new TwitterAuthConfig(key,secret);
         Fabric.with(this,new Twitter(authConfig));
         setContentView(R.layout.login);
+
 
         //componentes de twitter
 
@@ -118,7 +142,8 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                    goMainScreen();
+               // handleFacebookAccessToken(loginResult.getAccessToken());
+                goMainScreen();
             }
 
             @Override
@@ -133,10 +158,20 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
 
             }
         });
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuthListener=new FirebaseAuth.AuthStateListener(){
 
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user= firebaseAuth.getCurrentUser();
+                if(user!=null){
+                    goMainScreen();
+                }
+            }
+        };
         //TODO: Cambiar por la ip de la PC que corre el servicio RestEC en archivo strings.xml
         //ejecutar ipconfig para ver la ip de la maquina
-        urlREST = this.getResources().getString(R.string.urlREST);//this.getResources().getString(R.string.urlREST);
+        urlREST = this.getResources().getString(R.string.urlREST);
 
         editEmail = (EditText) findViewById(R.id.editEmail);
         editContrasena = (EditText) findViewById(R.id.editContrasena);
@@ -162,9 +197,22 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+    private void handleFacebookAccessToken(AccessToken accessToken) {
+        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(!task.isSuccessful()){
+                    Toast.makeText(getApplicationContext(),R.string.error_login,Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
     private void goMainScreen() {
         Intent intent=new Intent(Login.this,MenuUser.class);
+
         startActivity(intent);
+
     }
 
     @Override
@@ -214,17 +262,32 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     try {
+                        String user = editEmail.getText().toString();
+                        String passwd = editContrasena.getText().toString();
+
+
                         //Status 200 quiere decir que se recibio respuesta
                         if (statusCode == 200) {
                             if(responseBody != null && responseBody.length > 0) {
                                 JSONObject res = new JSONObject(new String(responseBody));
                                 Object valido = res.get("userValido");
+                                Object validoCor = res.get("correoIgual");
+                                Object validoPas = res.get("passwordIgual");
                                 //si el usuario es valido lo redireccionamos al Activity principal
                                 if(valido.toString().compareTo("true") == 0){
                                     Intent busq = new Intent(Login.this, MenuUser.class);
                                     startActivity(busq);
                                 }else {
-                                    Toast.makeText(getApplicationContext(), "Usuario o password incorrecto!", Toast.LENGTH_LONG).show();
+                                    //validarCajaTexto(validoCor,validoPas);
+                                    if (validoCor.toString().compareTo("true") == 0) {
+
+                                        editContrasena.setError("Contraceña Incorrecto");
+
+                                    } else {
+
+                                        editEmail.setError("Usuario Incorrecto");
+
+                                    }
                                 }
                             }
                         } else {
@@ -233,6 +296,16 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
                     } catch (Exception e) {
                         //e.printStackTrace();
                         Toast.makeText(getApplicationContext(), "Error" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                private void validarCajaTexto(Object validoCor,Object validoPas) {
+                    if(validoCor.toString().compareTo("false") == 1){
+
+                        editEmail.setError("Usuario Incorrecto");
+                    }
+                    if (validoPas.toString().compareTo("false") == 1){
+                        editContrasena.setError("Contraceña Incorrecto");
                     }
                 }
 
@@ -246,6 +319,8 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
             Toast.makeText(getApplicationContext(), "Por favor ingrese sus datos", Toast.LENGTH_LONG).show();
         }
     }
+
+
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -266,7 +341,7 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
     @Override
     public void onStart() {
         super.onStart();
-
+        firebaseAuth.addAuthStateListener(firebaseAuthListener);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();
@@ -276,7 +351,7 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
     @Override
     public void onStop() {
         super.onStop();
-
+        firebaseAuth.removeAuthStateListener(firebaseAuthListener);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
@@ -287,4 +362,5 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
 }

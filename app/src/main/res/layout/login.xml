@@ -47,7 +47,6 @@
         android:id="@+id/btnSesion" />
 
 
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -69,9 +68,10 @@
             android:id="@+id/fb_log_btn"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:drawableBottom="@drawable/com_facebook_button_icon_blue"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_weight="0.63" />
+            android:layout_weight="1.17" />
 
 
 

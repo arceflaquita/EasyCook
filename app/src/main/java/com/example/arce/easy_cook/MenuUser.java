@@ -6,19 +6,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.facebook.AccessToken;
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterSession;
-
-import io.fabric.sdk.android.Fabric;
 
 public class MenuUser extends AppCompatActivity {
     Button btnBusquedaEspecifica;
     Button btnAgregar;
     Button btnBusqueda;
 
-    private TwitterSession twitterSession;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +43,7 @@ public class MenuUser extends AppCompatActivity {
     }
 
     public void BuscarPersonalizada(View boton) {
-        Intent busq = new Intent(MenuUser.this, MenuUser.class);
+        Intent busq = new Intent(MenuUser.this, BusquedaTipoReceta.class);
         startActivity(busq);
     }
 }
