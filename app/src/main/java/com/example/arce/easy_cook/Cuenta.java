@@ -1,8 +1,8 @@
 package com.example.arce.easy_cook;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,13 +49,13 @@ public class Cuenta extends AppCompatActivity {
         btnRegistrar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                registrarUSuario(v);
+                registrarUsuario(v);
             }
         });
 
     }
 
-    private void registrarUSuario(View v) {
+    private void registrarUsuario(View v) {
         String nombre = editNombre.getText().toString();
         String paterno = editPaterno.getText().toString();
         String materno = editMaterno.getText().toString();

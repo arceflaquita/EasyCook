@@ -29,22 +29,32 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.entity.StringEntity;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class InsReceta extends AppCompatActivity {
-
-    private EditText editModoPrep;
-    private EditText editIngrediente;
-    private Button btnAgregar;
-    private ListView list;
+    String urlREST = "";
+    private EditText editModoPrep,editIngrediente,editNombreRec,editVideo;
+    private Button btnAgregar, btnAgregarRec;
+    private ListView listIng;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> arrayList;
-    private Spinner spnTipoComida;
-    private Spinner spnPorciones;
+    private Spinner spnTipoComida, spnPorciones;
     private static String APP_DIRECTORY = "EasyCook/";
     private static String MEDIA_DIRECTORY = APP_DIRECTORY + "Pictures";
     private final int MY_PERMISSIONS = 100;
@@ -62,21 +72,25 @@ public class InsReceta extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //TODO: Cambiar por la ip de la PC que corre el servicio RestEC en archivo strings.xml
+        urlREST = this.getResources().getString(R.string.urlREST);
         setContentView(R.layout.ins_receta);
-
+        editNombreRec = (EditText) findViewById(R.id.editNombreRec);
+        spnTipoComida = (Spinner) findViewById(R.id.spnTipoComida);
+        spnPorciones = (Spinner) findViewById(R.id.spnPorciones);
         editModoPrep = (EditText) findViewById(R.id.editModoPrep);
         editIngrediente = (EditText) findViewById(R.id.editIngrediente);
         btnAgregar = (Button) findViewById(R.id.btnAgregar);
-        list = (ListView) findViewById(R.id.listIng);
-        spnTipoComida = (Spinner) findViewById(R.id.spnTipoComida);
-        spnPorciones = (Spinner) findViewById(R.id.spnPorciones);
+        btnAgregarRec = (Button) findViewById(R.id.btnAgregarRec);
+        listIng = (ListView) findViewById(R.id.listIng);
         mSetImage = (ImageView) findViewById(R.id.set_picture);
         mOptionButton = (Button) findViewById(R.id.show_options_button);
         mRlView = (RelativeLayout) findViewById(R.id.rl_view);
+        editVideo = (EditText) findViewById(R.id.editVideo);
 
         arrayList = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
-        list.setAdapter(adapter);
+        listIng.setAdapter(adapter);
 
         ArrayAdapter<CharSequence> tipo_comida_adap = ArrayAdapter.createFromResource(this,
                 R.array.tipo_comida_arr, android.R.layout.simple_spinner_item);
@@ -99,7 +113,15 @@ public class InsReceta extends AppCompatActivity {
             }
         });
 
-        list.setOnTouchListener(new View.OnTouchListener() {
+        btnAgregarRec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //agrega la receta
+                registrarReceta(view);
+            }
+        });
+
+        listIng.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
@@ -111,7 +133,7 @@ public class InsReceta extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         if (event.getX() - historicX < -DELTA) {
-                            int pos = list.pointToPosition((int)historicX, (int)historicY);
+                            int pos = listIng.pointToPosition((int)historicX, (int)historicY);
                             adapter.remove(adapter.getItem(pos));
                             return true;
                         }
@@ -140,6 +162,77 @@ public class InsReceta extends AppCompatActivity {
         });
 
     }// onCreate
+
+    public void registrarReceta(View v) {
+        String nombre = editNombreRec.getText().toString();
+        String preparacion = editModoPrep.getText().toString();
+        String tipo_comida = String.valueOf(spnTipoComida.getSelectedItemPosition()+1);
+        String porciones = spnPorciones.getSelectedItem().toString();
+        String url_video = editVideo.getText().toString();
+
+        if(0 == nombre.compareTo("") || 0 == preparacion.compareTo("") || 0 == tipo_comida.compareTo("")
+                || 0 == porciones.compareTo("") || 0 == url_video.compareTo("")){
+            Toast.makeText(getApplicationContext(), "Capture toda la informacion!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        JSONObject jo = new JSONObject();
+        try {
+            jo.put("nombre", nombre);
+            jo.put("preparacion", preparacion);
+            jo.put("tipo_comida", tipo_comida);
+            jo.put("url_video", url_video);
+            jo.put("porciones", porciones);
+            jo.put("id_usuario", 1);
+            JSONArray ja = new JSONArray();
+            ArrayAdapter<String> adapter = (ArrayAdapter<String>) listIng.getAdapter();
+            for(int i=0; i<adapter.getCount();i++){
+                String item = adapter.getItem(i);
+                ja.put(item);
+            }
+            jo.put("ingredientes", ja);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        AsyncHttpClient ac = new AsyncHttpClient();
+        HttpEntity entity = null;
+        try {
+            entity = new StringEntity(jo.toString());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        String url = urlREST + "/nuevaReceta";
+        ac.post(this, url, entity, "application/json", new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                try {
+                    //Status 200 quiere decir que se recibio respuesta
+                    if (statusCode == 200) {
+                        if(responseBody != null && responseBody.length > 0) {
+                            Toast.makeText(getApplicationContext(), "Se registro correctamente!", Toast.LENGTH_LONG).show();
+                            editNombreRec.setText("");
+                            editModoPrep.setText("");
+                            editVideo.setText("");
+                            Intent bus = new Intent(InsReceta.this, Busqueda.class);
+                            startActivity(bus);
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    //e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Error" + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(getApplicationContext(), "Error onFailure: " + String.valueOf(statusCode) + " : " + error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
     private void openCamera() {
         //File file = new File(Environment.getExternalStorageDirectory(), MEDIA_DIRECTORY);
