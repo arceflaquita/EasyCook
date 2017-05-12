@@ -33,7 +33,7 @@ public class MenuUser extends AppCompatActivity {
     }
 
     public void Buscar(View boton) {
-        Intent busq = new Intent(MenuUser.this, Busqueda.class);
+        Intent busq = new Intent(MenuUser.this, BusquedaTipoReceta.class);
         startActivity(busq);
     }
 
@@ -43,7 +43,7 @@ public class MenuUser extends AppCompatActivity {
     }
 
     public void BuscarPersonalizada(View boton) {
-        Intent busq = new Intent(MenuUser.this, BusquedaTipoReceta.class);
+        Intent busq = new Intent(MenuUser.this, BusquedaEspecificaReceta.class);
         startActivity(busq);
     }
 }

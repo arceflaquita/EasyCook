@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
+    android:orientation="vertical" >
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.arce.easy_cook.BusquedaEspecificaReceta"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingredientes:"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/editIngrediente" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:text="Agregar"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:id="@+id/btnAgregar" />
+        </LinearLayout>
+        <ListView
+            android:id="@+id/listIng"
+            android:layout_width="fill_parent"
+            android:layout_height="67dp"
+            android:drawSelectorOnTop="false"
+            android:background="@color/colorAccent"
+            android:padding="5dp"
+            android:layout_weight="0.81" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:text="Buscar"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:id="@+id/btnBuscar" />
+        </LinearLayout>
+</LinearLayout>
+</ScrollView>
