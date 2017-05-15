@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,13 +37,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.Header;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -163,12 +165,30 @@ public class InsReceta extends AppCompatActivity {
 
     }// onCreate
 
+
+    public static String encodeToBase64(Bitmap image, Bitmap.CompressFormat compressFormat, int quality)
+    {
+        ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
+        image.compress(compressFormat, quality, byteArrayOS);
+        return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
+    }
+
+    public static Bitmap decodeBase64(String input)
+    {
+        byte[] decodedBytes = Base64.decode(input, 0);
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+    }
+
     public void registrarReceta(View v) {
         String nombre = editNombreRec.getText().toString();
         String preparacion = editModoPrep.getText().toString();
         String tipo_comida = String.valueOf(spnTipoComida.getSelectedItemPosition()+1);
         String porciones = spnPorciones.getSelectedItem().toString();
         String url_video = editVideo.getText().toString();
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        Bitmap bitmap = BitmapFactory.decodeFile(mPath, options);
+        String photo = encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 100);
 
         if(0 == nombre.compareTo("") || 0 == preparacion.compareTo("") || 0 == tipo_comida.compareTo("")
                 || 0 == porciones.compareTo("") || 0 == url_video.compareTo("")){
@@ -184,6 +204,7 @@ public class InsReceta extends AppCompatActivity {
             jo.put("url_video", url_video);
             jo.put("porciones", porciones);
             jo.put("id_usuario", 1);
+            jo.put("image", photo);
             JSONArray ja = new JSONArray();
             ArrayAdapter<String> adapter = (ArrayAdapter<String>) listIng.getAdapter();
             for(int i=0; i<adapter.getCount();i++){
