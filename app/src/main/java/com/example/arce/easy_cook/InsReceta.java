@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -42,9 +43,9 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
+import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.entity.StringEntity;
-import cz.msebera.android.httpclient.Header;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -70,6 +71,7 @@ public class InsReceta extends AppCompatActivity {
     static final int DELTA = 50;
     enum Direction {LEFT, RIGHT;}
     float dX, dY;
+    Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,7 +172,7 @@ public class InsReceta extends AppCompatActivity {
     {
         ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
         image.compress(compressFormat, quality, byteArrayOS);
-        return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
+        return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.NO_WRAP);
     }
 
     public static Bitmap decodeBase64(String input)
@@ -187,7 +189,7 @@ public class InsReceta extends AppCompatActivity {
         String url_video = editVideo.getText().toString();
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap bitmap = BitmapFactory.decodeFile(mPath, options);
+        //Bitmap bitmap = BitmapFactory.decodeFile(mPath, options);
         String photo = encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 100);
 
         if(0 == nombre.compareTo("") || 0 == preparacion.compareTo("") || 0 == tipo_comida.compareTo("")
@@ -268,11 +270,10 @@ public class InsReceta extends AppCompatActivity {
             Long timestamp = System.currentTimeMillis() / 1000;
             String imageName = timestamp.toString() + ".jpg";
 
-            mPath = Environment.getExternalStorageDirectory() + File.separator
-                    + File.separator + imageName;
+            mPath = Environment.getExternalStorageDirectory() + File.separator + imageName;
 
             File newFile = new File(mPath);
-
+            bitmap = BitmapFactory.decodeFile(mPath);
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(newFile));
             startActivityForResult(intent, PHOTO_CODE);
@@ -295,12 +296,14 @@ public class InsReceta extends AppCompatActivity {
                                     Log.i("ExternalStorage", "-> Uri = " + uri);
                                 }
                             });
-                    Bitmap bitmap = BitmapFactory.decodeFile(mPath);
+                    bitmap = BitmapFactory.decodeFile(mPath);
                     mSetImage.setImageBitmap(bitmap);
                     break;
                 case SELECT_PICTURE:
                     Uri path = data.getData();
                     mSetImage.setImageURI(path);
+                    BitmapDrawable drawable = (BitmapDrawable) mSetImage.getDrawable();
+                    bitmap = drawable.getBitmap();
                     break;
 
             }
