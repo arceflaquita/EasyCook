@@ -12,9 +12,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.appindexing.Action;
@@ -46,6 +51,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpEntity;
@@ -76,10 +82,13 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
     private FirebaseAuth firebaseAuth;
     private AuthCredential credential;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
+    private AccessTokenTracker accessTokenTracker ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
         TwitterAuthConfig authConfig=new TwitterAuthConfig(key,secret);
         Fabric.with(this,new Twitter(authConfig));
         setContentView(R.layout.login);
@@ -122,28 +131,27 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
 
 
         //Componentes de Facebook
+
         loginButton=(LoginButton)findViewById(R.id.fb_log_btn) ;
 
-
-        callbackManager=CallbackManager.Factory.create();
-
-       loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        callbackManager = CallbackManager.Factory.create();
+        loginButton.setReadPermissions(Arrays.asList("public_profile","email","user_friends"));
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                //handleFacebookAccessToken(loginResult.getAccessToken());
-                goMainScreen();
+
+                graphRequest(loginResult.getAccessToken());
+
             }
 
             @Override
             public void onCancel() {
                 Toast.makeText(getApplicationContext(),R.string.cancel_login,Toast.LENGTH_SHORT).show();
-
             }
 
             @Override
             public void onError(FacebookException error) {
                 Toast.makeText(getApplicationContext(),R.string.error_login,Toast.LENGTH_SHORT).show();
-
             }
         });
         firebaseAuth = FirebaseAuth.getInstance();
@@ -185,16 +193,25 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    private void handleFacebookAccessToken(AccessToken accessToken) {
-        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+    public void graphRequest(AccessToken token){
+        GraphRequest request = GraphRequest.newMeRequest(token,new GraphRequest.GraphJSONObjectCallback(){
+
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(!task.isSuccessful()){
-                    Toast.makeText(getApplicationContext(),R.string.error_login,Toast.LENGTH_SHORT).show();
-                }
+            public void onCompleted(JSONObject object, GraphResponse response) {
+
+
+               // Toast.makeText(getApplicationContext(),object.toString(),Toast.LENGTH_LONG).show();
+
             }
         });
+
+        Bundle b = new Bundle();
+        b.putString("fields","id,email,first_name,last_name,picture.type(large)");
+        request.setParameters(b);
+        request.executeAsync();
+        goMainScreen();
     }
+
 
     private void goMainScreen() {
         Intent intent=new Intent(Login.this,MenuUser.class);
@@ -205,7 +222,7 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-       // super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode,resultCode,data);
 
         if(requestCode==SIGN_IN_CODE){
