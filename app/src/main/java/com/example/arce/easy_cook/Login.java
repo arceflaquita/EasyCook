@@ -299,7 +299,7 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                    Toast.makeText(getApplicationContext(), "Error onFailure", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Error onFailure:  "+error, Toast.LENGTH_LONG).show();
                 }
             });
 

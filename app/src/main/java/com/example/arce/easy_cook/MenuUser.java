@@ -10,7 +10,7 @@ import android.widget.Button;
 public class MenuUser extends AppCompatActivity {
     Button btnBusquedaEspecifica;
     Button btnAgregar;
-    Button btnBusqueda;
+    Button btnBusqueda,btnBusquedaNombre;
 
 
 
@@ -23,6 +23,7 @@ public class MenuUser extends AppCompatActivity {
         btnBusquedaEspecifica= (Button)findViewById(R.id.btnBusEspecifica);
         btnAgregar= (Button)findViewById(R.id.btnAgregar);
         btnBusqueda= (Button)findViewById(R.id.btnBusqueda);
+        btnBusquedaNombre=(Button)findViewById(R.id.btnBusquedaNombre);
 
     }
 
@@ -44,6 +45,10 @@ public class MenuUser extends AppCompatActivity {
 
     public void BuscarPersonalizada(View boton) {
         Intent busq = new Intent(MenuUser.this, BusquedaEspecificaReceta.class);
+        startActivity(busq);
+    }
+    public void BuscarNombre(View boton) {
+        Intent busq = new Intent(MenuUser.this, Busqueda.class);
         startActivity(busq);
     }
 }
