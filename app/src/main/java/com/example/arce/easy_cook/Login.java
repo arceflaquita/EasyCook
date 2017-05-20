@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.arce.easy_cook.datos.DatosUsuario;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -267,19 +268,22 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     try {
-                        String user = editEmail.getText().toString();
-                        String passwd = editContrasena.getText().toString();
 
 
                         //Status 200 quiere decir que se recibio respuesta
                         if (statusCode == 200) {
                             if(responseBody != null && responseBody.length > 0) {
                                 JSONObject res = new JSONObject(new String(responseBody));
+                                DatosUsuario datosUsuario=new DatosUsuario();
                                 Object valido = res.get("userValido");
                                 Object validoCor = res.get("correoIgual");
-                                Object validoPas = res.get("passwordIgual");
+                                Object correo = res.get("correo");
+                                Object idUsuario = res.get("idUsuario");
+                                datosUsuario.setCorreo(String.valueOf(correo));
+                                datosUsuario.setIdUsuario(Integer.parseInt(idUsuario.toString()));
                                 //si el usuario es valido lo redireccionamos al Activity principal
                                 if(valido.toString().compareTo("true") == 0){
+
                                     Intent busq = new Intent(Login.this, MenuUser.class);
                                     startActivity(busq);
                                 }else {
@@ -287,11 +291,11 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
                                     if (validoCor.toString().compareTo("true") == 0) {
 
                                         editContrasena.setError("Contraceña Incorrecto");
-
+                                        editContrasena.setText("");
                                     } else {
 
                                         editEmail.setError("Usuario Incorrecto");
-
+                                        editEmail.setText("");
                                     }
                                 }
                             }

@@ -31,6 +31,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.arce.easy_cook.datos.DatosUsuario;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -199,13 +200,14 @@ public class InsReceta extends AppCompatActivity {
         }
 
         JSONObject jo = new JSONObject();
+        DatosUsuario datosUsuario=new DatosUsuario();
         try {
             jo.put("nombre", nombre);
             jo.put("preparacion", preparacion);
             jo.put("tipo_comida", tipo_comida);
             jo.put("url_video", url_video);
             jo.put("porciones", porciones);
-            jo.put("id_usuario", 1);
+            jo.put("id_usuario", datosUsuario.getIdUsuario());
             jo.put("image", photo);
             JSONArray ja = new JSONArray();
             ArrayAdapter<String> adapter = (ArrayAdapter<String>) listIng.getAdapter();
