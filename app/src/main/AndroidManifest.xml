@@ -76,7 +76,9 @@
 
         <activity android:name=".BusquedaTipoReceta" />
         <activity android:name=".BusquedaEspecificaReceta" />
-        <activity android:name=".ListaNomRecetas"></activity>
+        <activity android:name=".ListaNomRecetas" />
+        <activity android:name=".Mostrar_receta" />
+        <activity android:name=".RecetaDetalle" />
     </application>
 
 </manifest>

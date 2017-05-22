@@ -96,5 +96,21 @@
                 android:layout_centerHorizontal="true"/>
 
         </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:text="Lista Recetas"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:id="@+id/btnMostrarReceta"
+                android:onClick="MostrarReceta"
+                android:layout_above="@+id/btnBusqueda"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"/>
+
+        </LinearLayout>
 </LinearLayout>
 </ScrollView>

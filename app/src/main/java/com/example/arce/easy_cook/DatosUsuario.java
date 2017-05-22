@@ -1,4 +1,4 @@
-package com.example.arce.easy_cook.datos;
+package com.example.arce.easy_cook;
 
 /**
  * Created by SNOOPY on 18/05/2017.

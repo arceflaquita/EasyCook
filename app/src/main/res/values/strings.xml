@@ -3,7 +3,8 @@
     <string name="search_hint">Buscar receta...</string>
     <!--<string name="urlREST">http://100.78.86.159:8080/RestEC/services/EasyCook</string>-->
     <!--<string name="urlREST">http://192.168.43.128:8080/RestEC/services/EasyCook</string>-->
-    <string name="urlREST">http://177.232.105.23:4848/RestEC/services/EasyCook</string>
+    <string name="urlREST">http://192.168.0.14:8080/RestEC/services/EasyCook</string>
+    <string name="urlImages">http://192.168.0.14:8080/RestEC/images</string>
     <string-array name="tipo_comida_arr">
         <item>Tipo Comida</item>
         <item>Desayuno</item>
@@ -33,4 +34,5 @@
     <string name="twitter_consumer_secret">4XnIHc1yFJlg0Fr51lrro67BtMJ4Qo5hIOFJLIfOa08MR1WmgQ</string>
     <string name="title_activity_busqueda_especifica">busqueda_especifica</string>
     <string name="title_activity_busqueda_especifica_receta">BusquedaEspecificaReceta</string>
+    <string name="title_activity_receta_detalle">RecetaDetalle</string>
 </resources>

@@ -31,7 +31,6 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.arce.easy_cook.datos.DatosUsuario;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -240,7 +239,7 @@ public class InsReceta extends AppCompatActivity {
                             editNombreRec.setText("");
                             editModoPrep.setText("");
                             editVideo.setText("");
-                            Intent bus = new Intent(InsReceta.this, Busqueda.class);
+                            Intent bus = new Intent(InsReceta.this, Mostrar_receta.class);
                             startActivity(bus);
                         }
                     } else {
@@ -250,6 +249,7 @@ public class InsReceta extends AppCompatActivity {
                     //e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "Error" + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
+
             }
 
             @Override
