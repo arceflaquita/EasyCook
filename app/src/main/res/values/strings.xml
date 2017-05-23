@@ -5,6 +5,8 @@
     <!--<string name="urlREST">http://192.168.43.128:8080/RestEC/services/EasyCook</string>-->
     <string name="urlREST">http://192.168.0.14:8080/RestEC/services/EasyCook</string>
     <string name="urlImages">http://192.168.0.14:8080/RestEC/images</string>
+    <!--<string name="urlREST">http://192.168.43.194:8080/RestEC/services/EasyCook</string>
+    <string name="urlImages">http://192.168.43.194:8080/RestEC/images</string>-->
     <string-array name="tipo_comida_arr">
         <item>Tipo Comida</item>
         <item>Desayuno</item>

@@ -4,14 +4,15 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -40,7 +41,7 @@ public class RecetaDetalle extends AppCompatActivity {
     TextView tvPorciones;
     TextView tvIngredientes;
     TextView tvPreparacion;
-    VideoView video;
+    WebView mWebView;
     String urlREST = "";
     String urlImages = "";
     String id_rec;
@@ -57,7 +58,7 @@ public class RecetaDetalle extends AppCompatActivity {
         tvPorciones = (TextView)findViewById(R.id.tvPorciones);
         tvIngredientes = (TextView)findViewById(R.id.tvIngredientes);
         tvPreparacion = (TextView)findViewById(R.id.tvPreparacion);
-        video = (VideoView) findViewById(R.id.video);
+        mWebView = (WebView) findViewById(R.id.mWebView);
         //evita error android.os.NetworkOnMainThreadException en metodo LoadImageFromWebOperations
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -92,7 +93,6 @@ public class RecetaDetalle extends AppCompatActivity {
                     if (statusCode == 200) {
                         progressDialog .dismiss();
                         if(responseBody != null && responseBody.length > 0) {
-                            //JSONArray jsonArray = new JSONArray(new String(responseBody));
                             JSONObject json = new JSONObject(new String(responseBody));
                             String url = urlImages + File.separator;
                             Rect rect = new Rect(imgFoto.getLeft(),imgFoto.getTop(),imgFoto.getRight(),imgFoto.getBottom());
@@ -103,14 +103,17 @@ public class RecetaDetalle extends AppCompatActivity {
                             tvTipo.setText(json.getString("comida"));
                             tvPorciones.setText(json.getString("porciones"));
                             tvPreparacion.setText(json.getString("preparacion"));
-                            Uri vUri = Uri.parse(json.getString("url_video"));
-                            video.setVideoURI(vUri);
-                            //video.start();
+                            String urlVideo = json.getString("url_video");
                             JSONArray ings = json.getJSONArray("ingredientes");
                             for (int i=0; i < ings.length(); i++){
                                 tvIngredientes.setText(tvIngredientes.getText() + ings.getJSONObject(i).getString("nombre"));
                                 tvIngredientes.setText(tvIngredientes.getText() + "\n");
                             }
+                            //inicia el video
+                            mWebView.getSettings().setJavaScriptEnabled(true);
+                            mWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
+                            mWebView.loadUrl(urlVideo);
+                            mWebView.setWebChromeClient(new WebChromeClient());
                         }
                     } else {
                         Toast.makeText(getApplicationContext(), "Error: ", Toast.LENGTH_LONG).show();

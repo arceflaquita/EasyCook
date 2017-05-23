@@ -12,7 +12,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.arce.easy_cook.RecetaDetalle"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:baselineAligned="false">
 
     <ImageView
         android:id="@+id/imgFoto"
@@ -20,29 +21,77 @@
         android:layout_height="200dp" />
 
     <TextView
+        android:text="Nombre de receta"
         android:id="@+id/tvNombre"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="50dp"
+        android:textSize="30dp"
+        android:textColor="@color/colorPrimary"/>
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tvTipoTitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Tipo comida"
+            android:text="Tipo de comida: "
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="left"/>
+        <TextView
+            android:id="@+id/tvTipo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Tipo comida"
+            android:layout_gravity="right"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
     <TextView
-        android:id="@+id/tvTipo"
-        android:layout_width="match_parent"
-        android:layout_height="50dp" />
-
+        android:hint="Porciones"
+        android:id="@+id/tvPorcionesTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Porciones: "
+        android:textColor="@color/colorPrimary"
+        android:layout_gravity="left"/>
     <TextView
+        android:hint="Porción"
         android:id="@+id/tvPorciones"
-        android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"/>
+    </LinearLayout>
 
     <TextView
+        android:hint="Ingredientes"
+        android:id="@+id/tvIngredientesTitulo"
+        android:layout_width="fill_parent"
+        android:layout_height="30dp"
+        android:text="Ingredientes: "
+        android:textColor="@color/colorPrimary"/>
+    <TextView
+        android:hint="Ingredientes"
         android:id="@+id/tvIngredientes"
-        android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
 
     <TextView
+        android:hint="Ingredientes"
+        android:id="@+id/tvPreparacionTitulo"
+        android:layout_width="fill_parent"
+        android:layout_height="30dp"
+        android:text="Preparacion: "
+        android:textColor="@color/colorPrimary"/>
+    <TextView
+        android:hint="Preparación"
         android:id="@+id/tvPreparacion"
-        android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -50,10 +99,11 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <VideoView
-            android:id="@+id/video"
+        <WebView
+            android:id="@+id/mWebView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+        </WebView>
     </LinearLayout>
 
 </LinearLayout>
