@@ -45,7 +45,11 @@ public class Busqueda extends AppCompatActivity {
     //TextView Speech;
     ListView listRec;
     String urlREST = "";
+    private ListView listaReceta;
     List<String> recs;
+    List<String> recId;
+    ArrayList titulo = new ArrayList();
+    ArrayList imagen = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +133,7 @@ public class Busqueda extends AppCompatActivity {
                         //Status 200 quiere decir que se recibio respuesta
                         if (statusCode == 200) {
                             if(responseBody != null && responseBody.length > 0) {
-                                JSONArray res = new JSONArray(new String(responseBody));
+                                final JSONArray res = new JSONArray(new String(responseBody));
                                 //Toast.makeText(getApplicationContext(), res.toString(), Toast.LENGTH_LONG).show();
                                 if(res.length() == 0){
                                     Toast.makeText(getApplicationContext(), "No se encontraron recetas!", Toast.LENGTH_LONG).show();
@@ -139,6 +143,7 @@ public class Busqueda extends AppCompatActivity {
                                 for(int i=0; i < res.length(); i++){
                                     JSONObject obj = new JSONObject(res.get(i).toString());
                                     recs.add(obj.get("nombre").toString());
+                                    recId.add(obj.get("id").toString());
                                     //Toast.makeText(getApplicationContext(), obj.get("nombre").toString(), Toast.LENGTH_LONG).show();
                                 }
 
@@ -149,44 +154,29 @@ public class Busqueda extends AppCompatActivity {
                                 listRec.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                                         String selRec = recs.get(position);
+                                        int idReceta=Integer.valueOf(recId.get(position));
                                         //Toast.makeText(getApplicationContext(), "Receta Seleccionada : " + selRec,   Toast.LENGTH_LONG).show();
 
-                                        String yURL = "https://www.googleapis.com/youtube/v3/search?part=id&key=AIzaSyC83ctBM8zQz4tEH0RPboDnR9qkWH1LCZA&maxResults=1&q=" + selRec.replace(" ", "%20");
-                                        AsyncHttpClient yac =  new AsyncHttpClient();
-                                        yac.get(yURL, new AsyncHttpResponseHandler() {
-                                            @Override
-                                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                                                if (statusCode == 200) {
-                                                    if(responseBody != null && responseBody.length > 0) {
-                                                        try {
-                                                            JSONObject yvid = new JSONObject(new String(responseBody));
-                                                            JSONArray yvarr = new JSONArray(yvid.getString("items"));
-                                                            JSONObject youvid = yvarr.getJSONObject(0);
-                                                            String video = youvid.getJSONObject("id").get("videoId").toString();
+                                        JSONObject jo = new JSONObject();
+                                        try {
 
-                                                            String youtubeURL = "https://www.youtube.com/watch?v=" + video;
-                                                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeURL));
-                                                            startActivity(browserIntent);
-                                                            //Toast.makeText(getApplicationContext(), video, Toast.LENGTH_LONG).show();
-                                                        } catch (JSONException e) {
-                                                            //e.printStackTrace();
-                                                            Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                                                        }
-                                                    }else{
-                                                        Toast.makeText(getApplicationContext(), "No se encontraron videos!", Toast.LENGTH_LONG).show();
-                                                    }
-                                                }else{
-                                                    Toast.makeText(getApplicationContext(), "No se encontraron videos!", Toast.LENGTH_LONG).show();
-                                                }
-                                            }
-                                            @Override
-                                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                                                Toast.makeText(getApplicationContext(), "Error Youtube", Toast.LENGTH_LONG).show();
-                                            }
-                                        });
+                                            jo.put("id", idReceta);
+
+                                            Intent busq = new Intent(Busqueda.this, RespuestaBusquedaReceta.class);
+                                            busq.putExtra("idReceta", jo.toString());
+                                            startActivity(busq);
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                        //Toast.makeText(getApplicationContext(), "Receta Seleccionada : " + selRec, Toast.LENGTH_LONG).show();
+                                        //Toast.makeText(getApplicationContext(), "id de receta : " + idReceta, Toast.LENGTH_LONG).show();
+
                                     }
-                                });
+                                        });
+
+
 
                             }else{
                                 Toast.makeText(getApplicationContext(), "No se encontraron recetas!", Toast.LENGTH_LONG).show();

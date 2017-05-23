@@ -41,7 +41,7 @@ public class Mostrar_receta extends AppCompatActivity {
     ArrayList id_receta = new ArrayList();
     ArrayList titulo = new ArrayList();
     ArrayList imagen = new ArrayList();
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);

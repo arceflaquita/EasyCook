@@ -3,6 +3,7 @@ package com.example.arce.easy_cook;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -69,8 +70,16 @@ public class BusquedaEspecificaReceta extends AppCompatActivity {
         btnBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(adapter.getCount()==0){
+                    alerta("ingrese al menos un ingrediente !");
+                   // Toast.makeText(getApplicationContext(), "ingrese al menos un ingrediente !", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                busquedaEspecifica(view);
             }
+
+
         });
 
         listIng.setOnTouchListener(new View.OnTouchListener() {
@@ -124,6 +133,19 @@ public class BusquedaEspecificaReceta extends AppCompatActivity {
             e.printStackTrace();
         }
 
+
+    }
+    public void alerta(String cadena){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        //seleccionamos la cadena a mostrar
+        dialogBuilder.setMessage(cadena);
+        dialogBuilder.setIcon(android.R.drawable.ic_dialog_info);
+
+        //elegimo un titulo y configuramos para que se pueda quitar
+        dialogBuilder.setCancelable(true).setTitle("Warning");
+
+        //mostramos el dialogBuilder
+        dialogBuilder.create().show();
 
     }
 }

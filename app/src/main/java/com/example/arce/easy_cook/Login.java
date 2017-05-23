@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -321,7 +322,8 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
             });
 
         }else{
-            Toast.makeText(getApplicationContext(), "Por favor ingrese sus datos", Toast.LENGTH_LONG).show();
+          //  Toast.makeText(getApplicationContext(), "Por favor ingrese sus datos", Toast.LENGTH_LONG).show();
+            alerta("Por favor ingrese sus datos");
         }
     }
 
@@ -367,5 +369,17 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+    public void alerta(String cadena){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        //seleccionamos la cadena a mostrar
+        dialogBuilder.setMessage(cadena);
+        dialogBuilder.setIcon(android.R.drawable.ic_dialog_info);
 
+        //elegimo un titulo y configuramos para que se pueda quitar
+        dialogBuilder.setCancelable(true).setTitle("Warning");
+
+        //mostramos el dialogBuilder
+        dialogBuilder.create().show();
+
+    }
 }

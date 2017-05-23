@@ -79,6 +79,7 @@
         <activity android:name=".ListaNomRecetas" />
         <activity android:name=".Mostrar_receta" />
         <activity android:name=".RecetaDetalle" />
+        <activity android:name=".RespuestaBusquedaReceta"></activity>
     </application>
 
 </manifest>
