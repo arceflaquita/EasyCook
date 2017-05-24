@@ -23,7 +23,7 @@
         android:id="@+id/imageView4"
         android:layout_width="match_parent"
         android:layout_height="99dp"
-        android:layout_weight="0.45"
+        android:layout_weight="0.39"
         app:srcCompat="@drawable/easy" />
 
     <EditText
