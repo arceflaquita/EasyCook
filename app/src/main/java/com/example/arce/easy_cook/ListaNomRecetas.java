@@ -60,7 +60,7 @@ public class ListaNomRecetas extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String id_rec = String.valueOf(id_receta.get(position));
                 //Toast.makeText(getApplicationContext(), "receta_id: " + id_rec, Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(ListaNomRecetas.this, RecetaDetalle.class);
+                Intent intent = new Intent(ListaNomRecetas.this, RespuestaBusquedaReceta.class);
                 intent.putExtra("id_rec", id_rec);
                 startActivity(intent);
             }

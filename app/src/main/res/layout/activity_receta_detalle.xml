@@ -97,13 +97,16 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        >
 
-        <WebView
-            android:id="@+id/mWebView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </WebView>
+        <Button
+            android:layout_marginTop="19dp"
+            android:id="@+id/compartir"
+            android:layout_width="90dp"
+            android:layout_height="82dp"
+            android:background="@drawable/compartir"
+            />
     </LinearLayout>
 
 </LinearLayout>

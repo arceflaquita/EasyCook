@@ -83,6 +83,13 @@
                 android:layout_height="106dp"
                 android:background="@drawable/youtube"
                  />
+            <Button
+                android:layout_marginTop="19dp"
+                android:id="@+id/compartir"
+                android:layout_width="90dp"
+                android:layout_height="82dp"
+                android:background="@drawable/compartir"
+                />
         </LinearLayout>
 </LinearLayout>
 </ScrollView>

@@ -28,6 +28,9 @@ public class RespuestaBusquedaReceta extends AppCompatActivity {
         private TextView txtNombreReceta,txtIngredientes ,txtPreparacion;
         private ImageView imagenReceta;
         private Button btnyotube;
+    private Uri imageUri;
+    private Intent intent;
+    Button compartir;
         String urlREST = "";
     String recs="\n";
     String idReceta="";
@@ -42,6 +45,7 @@ public class RespuestaBusquedaReceta extends AppCompatActivity {
         txtPreparacion=(TextView) findViewById(R.id.textPreparacion);
         imagenReceta=(ImageView) findViewById(R.id.imagenReceta);
         btnyotube=(Button) findViewById(R.id.youtubeReceta);
+        compartir=(Button)findViewById(R.id.compartir);
         idReceta = getIntent().getStringExtra("idReceta");
         busquedaReceta();
         btnyotube.setOnClickListener(new View.OnClickListener(){
@@ -53,7 +57,21 @@ public class RespuestaBusquedaReceta extends AppCompatActivity {
 
         });
 
+        compartir.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                imageUri = Uri.parse("http://192.168.0.10:8080/RestEC/images/receta_1.jpg");
 
+                intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT, txtNombreReceta.getText().toString());
+                intent.putExtra(Intent.EXTRA_STREAM, imageUri);
+                intent.setType("image/*");
+                startActivity(intent);
+            }
+
+
+        });
 
 
     }

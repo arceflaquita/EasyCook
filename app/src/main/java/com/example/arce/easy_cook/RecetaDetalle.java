@@ -1,15 +1,19 @@
 package com.example.arce.easy_cook;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,10 +45,13 @@ public class RecetaDetalle extends AppCompatActivity {
     TextView tvPorciones;
     TextView tvIngredientes;
     TextView tvPreparacion;
+    Button compartir;
     WebView mWebView;
     String urlREST = "";
     String urlImages = "";
     String id_rec;
+    private Uri imageUri;
+    private Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,13 +65,28 @@ public class RecetaDetalle extends AppCompatActivity {
         tvPorciones = (TextView)findViewById(R.id.tvPorciones);
         tvIngredientes = (TextView)findViewById(R.id.tvIngredientes);
         tvPreparacion = (TextView)findViewById(R.id.tvPreparacion);
-        mWebView = (WebView) findViewById(R.id.mWebView);
+        //mWebView = (WebView) findViewById(R.id.mWebView);
+        compartir=(Button)findViewById(R.id.compartir);
         //evita error android.os.NetworkOnMainThreadException en metodo LoadImageFromWebOperations
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
         mostrarInfo(id_rec);
+        compartir.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+                intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT, tvNombre.getText().toString());
+                intent.putExtra(Intent.EXTRA_STREAM, imageUri);
+                intent.setType("image/*");
+                startActivity(intent);
+            }
+
+
+        });
     }
 
     private void mostrarInfo(String id_rec) {
@@ -97,6 +119,7 @@ public class RecetaDetalle extends AppCompatActivity {
                             String url = urlImages + File.separator;
                             Rect rect = new Rect(imgFoto.getLeft(),imgFoto.getTop(),imgFoto.getRight(),imgFoto.getBottom());
                             url += json.getString("image");
+                            imageUri = Uri.parse(url);
                             Bitmap drawable = LoadImageFromWeb(url);
                             imgFoto.setImageBitmap(drawable);
                             tvNombre.setText(json.getString("nombre"));
