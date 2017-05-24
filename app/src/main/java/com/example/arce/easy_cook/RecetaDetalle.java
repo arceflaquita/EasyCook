@@ -1,15 +1,20 @@
 package com.example.arce.easy_cook;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +28,8 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -42,9 +49,16 @@ public class RecetaDetalle extends AppCompatActivity {
     TextView tvIngredientes;
     TextView tvPreparacion;
     WebView mWebView;
+    Button compartir;
+    private Button btnyotube;
+
     String urlREST = "";
     String urlImages = "";
     String id_rec;
+    public Bitmap imageUri;
+    private Intent intent;
+    String urlVideo="";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,12 +72,55 @@ public class RecetaDetalle extends AppCompatActivity {
         tvPorciones = (TextView)findViewById(R.id.tvPorciones);
         tvIngredientes = (TextView)findViewById(R.id.tvIngredientes);
         tvPreparacion = (TextView)findViewById(R.id.tvPreparacion);
-        mWebView = (WebView) findViewById(R.id.mWebView);
+        btnyotube=(Button) findViewById(R.id.youtubeReceta);
+        //mWebView = (WebView) findViewById(R.id.mWebView);
+        compartir=(Button)findViewById(R.id.compartir);
         //evita error android.os.NetworkOnMainThreadException en metodo LoadImageFromWebOperations
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
+        compartir.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+
+                //aqui asginamos la accion a realizar
+                //importamos las librerias con alt+intro
+
+                imgFoto.buildDrawingCache();
+                Bitmap bitmap = imgFoto.getDrawingCache();
+
+                /***** COMPARTIR IMAGEN *****/
+                try {
+                    File file = new File(getCacheDir(), bitmap + ".jpg");
+                    FileOutputStream fOut = null;
+                    fOut = new FileOutputStream(file);
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+                    fOut.flush();
+                    fOut.close();
+                    file.setReadable(true, false);
+                    final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra(Intent.EXTRA_TEXT, "Receta de EASY-COOK: "+tvNombre.getText());
+                    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                    intent.setType("image/jpg");
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        btnyotube.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                videoYoutube(v);
+            }
+
+
+        });
+
         mostrarInfo(id_rec);
     }
 
@@ -98,22 +155,20 @@ public class RecetaDetalle extends AppCompatActivity {
                             Rect rect = new Rect(imgFoto.getLeft(),imgFoto.getTop(),imgFoto.getRight(),imgFoto.getBottom());
                             url += json.getString("image");
                             Bitmap drawable = LoadImageFromWeb(url);
+                            imageUri=drawable;
                             imgFoto.setImageBitmap(drawable);
                             tvNombre.setText(json.getString("nombre"));
                             tvTipo.setText(json.getString("comida"));
                             tvPorciones.setText(json.getString("porciones"));
                             tvPreparacion.setText(json.getString("preparacion"));
-                            String urlVideo = json.getString("url_video");
+                            urlVideo = json.getString("url_video");
                             JSONArray ings = json.getJSONArray("ingredientes");
                             for (int i=0; i < ings.length(); i++){
                                 tvIngredientes.setText(tvIngredientes.getText() + ings.getJSONObject(i).getString("nombre"));
                                 tvIngredientes.setText(tvIngredientes.getText() + "\n");
                             }
-                            //inicia el video
-                            mWebView.getSettings().setJavaScriptEnabled(true);
-                            mWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
-                            mWebView.loadUrl(urlVideo);
-                            mWebView.setWebChromeClient(new WebChromeClient());
+
+
                         }
                     } else {
                         Toast.makeText(getApplicationContext(), "Error: ", Toast.LENGTH_LONG).show();
@@ -150,5 +205,61 @@ public class RecetaDetalle extends AppCompatActivity {
             //Log.d("ImageManager", "Error: " + e);
         }
         return bm;
+    }
+
+    private void videoYoutube(View v){
+
+        String selRec = tvNombre.getText().toString();
+       // Toast.makeText(getApplicationContext(), "Receta Seleccionada : " + selRec,   Toast.LENGTH_LONG).show();
+
+        String yURL = "https://www.googleapis.com/youtube/v3/search?part=id&key=AIzaSyC83ctBM8zQz4tEH0RPboDnR9qkWH1LCZA&maxResults=1&q=" + selRec.replace(" ", "%20");
+        AsyncHttpClient yac =  new AsyncHttpClient();
+        yac.get(yURL, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                if (statusCode == 200) {
+                    if(responseBody != null && responseBody.length > 0) {
+                        try {
+                            JSONObject yvid = new JSONObject(new String(responseBody));
+                            JSONArray yvarr = new JSONArray(yvid.getString("items"));
+                            JSONObject youvid = yvarr.getJSONObject(0);
+                            String video = youvid.getJSONObject("id").get("videoId").toString();
+
+                            String youtubeURL = urlVideo;
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeURL));
+                            startActivity(browserIntent);
+                            //Toast.makeText(getApplicationContext(), video, Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            //e.printStackTrace();
+                            alerta( "Error: " + e.getMessage());
+                            //Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }else{
+                        alerta("No se encontraron videos!");
+                       // Toast.makeText(getApplicationContext(), "No se encontraron videos!", Toast.LENGTH_LONG).show();
+                    }
+                }else{
+                    alerta("No se encontraron videos!");
+                    //Toast.makeText(getApplicationContext(), "No se encontraron videos!", Toast.LENGTH_LONG).show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(getApplicationContext(), "Error Youtube", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+    public void alerta(String cadena){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        //seleccionamos la cadena a mostrar
+        dialogBuilder.setMessage(cadena);
+        dialogBuilder.setIcon(android.R.drawable.ic_dialog_info);
+
+        //elegimo un titulo y configuramos para que se pueda quitar
+        dialogBuilder.setCancelable(true).setTitle("Warning");
+
+        //mostramos el dialogBuilder
+        dialogBuilder.create().show();
+
     }
 }

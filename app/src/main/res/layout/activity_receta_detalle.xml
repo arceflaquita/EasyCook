@@ -25,6 +25,7 @@
             android:id="@+id/tvNombre"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:textAlignment="center"
             android:textSize="30dp"
             android:textColor="@color/colorPrimary"/>
 
@@ -98,13 +99,21 @@
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
+            <Button
+                android:layout_marginTop="19dp"
+                android:id="@+id/youtubeReceta"
+                android:layout_width="89dp"
+                android:layout_height="89dp"
+                android:background="@drawable/youtube"
+                />
 
-            <WebView
-                android:id="@+id/mWebView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </WebView>
-        </LinearLayout>
-
+            <Button
+                android:layout_marginTop="19dp"
+                android:id="@+id/compartir"
+                android:layout_width="93dp"
+                android:layout_height="89dp"
+                android:background="@drawable/compartir"
+                />
+    </LinearLayout>
     </LinearLayout>
 </ScrollView>

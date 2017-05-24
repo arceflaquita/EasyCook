@@ -46,7 +46,7 @@ public class RespuestaBusquedaReceta extends AppCompatActivity {
         imagenReceta=(ImageView) findViewById(R.id.imagenReceta);
         btnyotube=(Button) findViewById(R.id.youtubeReceta);
         compartir=(Button)findViewById(R.id.compartir);
-        idReceta = getIntent().getStringExtra("idReceta");
+        idReceta = getIntent().getStringExtra("id_rec");
         busquedaReceta();
         btnyotube.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -60,7 +60,7 @@ public class RespuestaBusquedaReceta extends AppCompatActivity {
         compartir.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                imageUri = Uri.parse("http://192.168.0.10:8080/RestEC/images/receta_1.jpg");
+                imageUri = Uri.parse("http://177.233.183.16:4848/RestEC/images/receta_1.jpg");
 
                 intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);

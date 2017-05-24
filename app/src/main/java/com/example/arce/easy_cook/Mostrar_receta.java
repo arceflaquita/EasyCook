@@ -61,7 +61,6 @@ public class Mostrar_receta extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
         descargarImagen();
     }
 
