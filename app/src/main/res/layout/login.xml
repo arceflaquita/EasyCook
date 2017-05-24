@@ -20,10 +20,11 @@
     tools:context="com.example.arce.easy_cook.Login">
 
     <ImageView
-        android:layout_width="120dp"
+        android:id="@+id/imageView4"
+        android:layout_width="match_parent"
         android:layout_height="99dp"
-        app:srcCompat="@drawable/easy"
-        android:id="@+id/imageView4" />
+        android:layout_weight="0.45"
+        app:srcCompat="@drawable/easy" />
 
     <EditText
         android:layout_width="match_parent"
