@@ -129,9 +129,7 @@ public class Busqueda extends AppCompatActivity {
         imagen.clear();
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            final ProgressDialog progressDialog = new ProgressDialog(Busqueda.this);
-            progressDialog.setMessage("Cargando Datos.....");
-            progressDialog.show();
+
             String query = intent.getStringExtra(SearchManager.QUERY);
             //Speech.setText("Buscando receta: " + query);
 
@@ -157,7 +155,6 @@ public class Busqueda extends AppCompatActivity {
                     try {
                         //Status 200 quiere decir que se recibio respuesta
                         if (statusCode == 200) {
-                            progressDialog .dismiss();
                             if(responseBody != null && responseBody.length > 0) {
                                 JSONArray jsonArray = new JSONArray(new String(responseBody));
                                 for (int i=0; i<jsonArray.length();i++){
