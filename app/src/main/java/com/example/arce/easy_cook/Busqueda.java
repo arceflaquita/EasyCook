@@ -12,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.speech.RecognizerIntent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -167,9 +168,11 @@ public class Busqueda extends AppCompatActivity {
                                 ImagenAdapter ia = new ImagenAdapter(getApplicationContext());
                                 listaReceta.setAdapter(ia);
                             }else{
-                                Toast.makeText(getApplicationContext(), "No se encontraron recetas!", Toast.LENGTH_LONG).show();
+                                alerta("No se encontraron recetas!");
+                                //Toast.makeText(getApplicationContext(), "No se encontraron recetas!", Toast.LENGTH_LONG).show();
                             }
                         } else {
+
                             Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
                         }
                     } catch (Exception e) {
@@ -225,5 +228,19 @@ public class Busqueda extends AppCompatActivity {
             tvtitulo.setText(titulo.get(position).toString());
             return viewgroup;
         }
+    }
+
+    public void alerta(String cadena){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        //seleccionamos la cadena a mostrar
+        dialogBuilder.setMessage(cadena);
+        dialogBuilder.setIcon(android.R.drawable.ic_dialog_info);
+
+        //elegimo un titulo y configuramos para que se pueda quitar
+        dialogBuilder.setCancelable(true).setTitle("Warning");
+
+        //mostramos el dialogBuilder
+        dialogBuilder.create().show();
+
     }
 }

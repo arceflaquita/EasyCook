@@ -283,6 +283,8 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
 
                                     Intent busq = new Intent(Login.this, MenuUser.class);
                                     startActivity(busq);
+                                    editEmail.setText("");
+                                    editContrasena.setText("");
                                 }else {
                                     //validarCajaTexto(validoCor,validoPas);
                                     if (validoCor.toString().compareTo("true") == 0) {
