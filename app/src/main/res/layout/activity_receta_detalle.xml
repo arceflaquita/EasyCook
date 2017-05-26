@@ -6,14 +6,15 @@
     android:layout_height="fill_parent"
     android:fillViewport="true"
     android:orientation="vertical" >
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.example.arce.easy_cook.RecetaDetalle"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
         android:orientation="vertical"
-        android:baselineAligned="false">
+        tools:context="com.example.arce.easy_cook.RecetaDetalle">
 
         <ImageView
             android:id="@+id/imgFoto"
@@ -21,100 +22,107 @@
             android:layout_height="200dp" />
 
         <TextView
-            android:text="Nombre de receta"
             android:id="@+id/tvNombre"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:text="Nombre de receta"
             android:textAlignment="center"
-            android:textSize="30dp"
-            android:textColor="@color/colorPrimary"/>
+            android:textColor="@color/colorPrimary"
+            android:textSize="30dp" />
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="30dp"
             android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/tvTipoTitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="left"
                 android:hint="Tipo comida"
                 android:text="Tipo de comida: "
-                android:textColor="@color/colorPrimary"
-                android:layout_gravity="left"/>
+                android:textColor="@color/colorPrimary" />
+
             <TextView
                 android:id="@+id/tvTipo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Tipo comida"
-                android:layout_gravity="right"/>
+                android:layout_gravity="right"
+                android:hint="Tipo comida" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="30dp"
             android:orientation="horizontal">
+
             <TextView
-                android:hint="Porciones"
                 android:id="@+id/tvPorcionesTitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:hint="Porciones"
                 android:text="Porciones: "
-                android:textColor="@color/colorPrimary"
-                android:layout_gravity="left"/>
+                android:textColor="@color/colorPrimary" />
+
             <TextView
-                android:hint="Porción"
                 android:id="@+id/tvPorciones"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"/>
+                android:layout_gravity="right"
+                android:hint="Porción" />
         </LinearLayout>
 
         <TextView
-            android:hint="Ingredientes"
             android:id="@+id/tvIngredientesTitulo"
             android:layout_width="fill_parent"
             android:layout_height="30dp"
-            android:text="Ingredientes: "
-            android:textColor="@color/colorPrimary"/>
-        <TextView
             android:hint="Ingredientes"
-            android:id="@+id/tvIngredientes"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:text="Ingredientes: "
+            android:textColor="@color/colorPrimary" />
 
         <TextView
-            android:hint="Ingredientes"
+            android:id="@+id/tvIngredientes"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingredientes" />
+
+        <TextView
             android:id="@+id/tvPreparacionTitulo"
             android:layout_width="fill_parent"
             android:layout_height="30dp"
+            android:hint="Ingredientes"
             android:text="Preparacion: "
-            android:textColor="@color/colorPrimary"/>
+            android:textColor="@color/colorPrimary" />
+
         <TextView
-            android:hint="Preparación"
             android:id="@+id/tvPreparacion"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:hint="Preparación" />
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:orientation="horizontal"
             android:weightSum="1">
+
             <Button
-                android:layout_marginTop="19dp"
                 android:id="@+id/youtubeReceta"
                 android:layout_width="89dp"
                 android:layout_height="89dp"
-                android:background="@drawable/youtube"
-                />
+                android:layout_marginTop="19dp"
+                android:background="@drawable/youtube" />
 
             <Button
-                android:layout_marginTop="19dp"
                 android:id="@+id/compartir"
                 android:layout_width="63dp"
                 android:layout_height="62dp"
-                android:background="@drawable/compartir"
-                android:layout_weight="0.01" />
-    </LinearLayout>
+                android:layout_marginTop="19dp"
+                android:layout_weight="0.01"
+                android:background="@drawable/compartir" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

@@ -62,7 +62,7 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
     private CallbackManager callbackManager;
     private EditText editEmail, editContrasena;
     Button btnSesion;
-    TextView txtCuenta;
+    TextView txtCuenta,txtPassword;
     String urlREST = "";
 
     public static final int SIGN_IN_CODE=777;
@@ -171,6 +171,15 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
         editContrasena = (EditText) findViewById(R.id.editContrasena);
         btnSesion = (Button) findViewById(R.id.btnSesion);
         txtCuenta = (TextView) findViewById(R.id.txtCuenta);
+        txtPassword=(TextView)findViewById(R.id.txtRecuperar) ;
+
+        txtPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent abreCuenta = new Intent(Login.this, RecuperarPassword.class);
+                startActivity(abreCuenta);
+            }
+        });
 
         txtCuenta.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -291,6 +300,8 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
 
                                         editContrasena.setError("Contraceña Incorrecto");
                                         editContrasena.setText("");
+                                        editEmail.setError("Usuario Incorrecto");
+                                        editEmail.setText("");
                                     } else {
 
                                         editEmail.setError("Usuario Incorrecto");

@@ -11,7 +11,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />!
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    !
     <uses-permission android:name="android.permission.CAMERA" />
 
     <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
@@ -77,7 +78,8 @@
         <activity android:name=".ListaNomRecetas" />
         <activity android:name=".Mostrar_receta" />
         <activity android:name=".RecetaDetalle" />
-        <activity android:name=".RespuestaBusquedaReceta"></activity>
+        <activity android:name=".RespuestaBusquedaReceta" />
+        <activity android:name=".RecuperarPassword"></activity>
     </application>
 
 </manifest>
