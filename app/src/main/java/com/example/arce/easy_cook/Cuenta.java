@@ -2,6 +2,7 @@ package com.example.arce.easy_cook;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -65,12 +66,14 @@ public class Cuenta extends AppCompatActivity {
 
         if(0 == nombre.compareTo("") || 0 == paterno.compareTo("") || 0 == materno.compareTo("")
                 || 0 == password.compareTo("") || 0 == repPassword.compareTo("")){
-            Toast.makeText(getApplicationContext(), "Capture toda la informacion!", Toast.LENGTH_LONG).show();
+            alerta("Capture toda la informacion!","Warning");
+            //Toast.makeText(getApplicationContext(), "Capture toda la informacion!", Toast.LENGTH_LONG).show();
             return;
         }
         if(0 != password.compareTo(repPassword))
         {
-            Toast.makeText(getApplicationContext(), "Las contraseñas no coinciden!", Toast.LENGTH_LONG).show();
+            alerta("Las contraseñas no coinciden!","Error");
+           // Toast.makeText(getApplicationContext(), "Las contraseñas no coinciden!", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -105,7 +108,8 @@ public class Cuenta extends AppCompatActivity {
                             Object valido = res.get("userValido");
                             //si el usuario es valido lo redireccionamos al Activity principal
                             if(valido.toString().compareTo("true") == 0){
-                                Toast.makeText(getApplicationContext(), "Se registro correctamente!", Toast.LENGTH_LONG).show();
+                                alerta("Se registro correctamente!","Exito");
+                                //Toast.makeText(getApplicationContext(), "Se registro correctamente!", Toast.LENGTH_LONG).show();
                                 editNombre.setText("");
                                 editPaterno.setText("");
                                 editMaterno.setText("");
@@ -115,7 +119,8 @@ public class Cuenta extends AppCompatActivity {
                                 Intent log = new Intent(Cuenta.this, Login.class);
                                 startActivity(log);
                             }else {
-                                Toast.makeText(getApplicationContext(), "Error al registrar el usuario!", Toast.LENGTH_LONG).show();
+                               // Toast.makeText(getApplicationContext(), "Error al registrar el usuario!", Toast.LENGTH_LONG).show();
+                                alerta("Error al registrar el usuario!","Error");
                             }
                         }
                     } else {
@@ -132,5 +137,18 @@ public class Cuenta extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Error onFailure", Toast.LENGTH_LONG).show();
             }
         });
+    }
+    public void alerta(String cadena,String tipo){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        //seleccionamos la cadena a mostrar
+        dialogBuilder.setMessage(cadena);
+        dialogBuilder.setIcon(android.R.drawable.ic_dialog_info);
+
+        //elegimo un titulo y configuramos para que se pueda quitar
+        dialogBuilder.setCancelable(true).setTitle(tipo);
+
+        //mostramos el dialogBuilder
+        dialogBuilder.create().show();
+
     }
 }

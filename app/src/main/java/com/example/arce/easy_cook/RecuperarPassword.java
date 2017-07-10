@@ -69,7 +69,7 @@ public class RecuperarPassword extends AppCompatActivity {
 
                         //Status 200 quiere decir que se recibio respuesta
                         if (statusCode == 200) {
-                           alerta("Contraseña Enviada");
+                           alerta("Contraseña Enviada","Enviado..");
                         } else {
                             Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
                         }
@@ -89,17 +89,17 @@ public class RecuperarPassword extends AppCompatActivity {
 
         }else{
             //  Toast.makeText(getApplicationContext(), "Por favor ingrese sus datos", Toast.LENGTH_LONG).show();
-            alerta("Por favor ingrese su correo");
+            alerta("Por favor ingrese su correo","Error");
         }
     }
-    public void alerta(String cadena){
+    public void alerta(String cadena,String tipo){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         //seleccionamos la cadena a mostrar
         dialogBuilder.setMessage(cadena);
         dialogBuilder.setIcon(android.R.drawable.ic_dialog_info);
 
         //elegimo un titulo y configuramos para que se pueda quitar
-        dialogBuilder.setCancelable(true).setTitle("Enviado");
+        dialogBuilder.setCancelable(true).setTitle(tipo);
 
         //mostramos el dialogBuilder
         dialogBuilder.create().show();

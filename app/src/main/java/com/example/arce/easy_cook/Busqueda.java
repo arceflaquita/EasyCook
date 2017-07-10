@@ -234,7 +234,7 @@ public class Busqueda extends AppCompatActivity {
         dialogBuilder.setIcon(android.R.drawable.ic_dialog_info);
 
         //elegimo un titulo y configuramos para que se pueda quitar
-        dialogBuilder.setCancelable(true).setTitle("Warning");
+        dialogBuilder.setCancelable(true).setTitle("Error");
 
         //mostramos el dialogBuilder
         dialogBuilder.create().show();

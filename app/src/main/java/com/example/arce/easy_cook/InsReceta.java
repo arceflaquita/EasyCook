@@ -122,7 +122,7 @@ public class InsReceta extends AppCompatActivity {
             public void onClick(View view) {
                 //agrega la receta
                 if(editNombreRec.getText().toString()=="" || editModoPrep.getText().toString()=="" || 0 ==spnTipoComida.getSelectedItemPosition()){
-                    alerta( "Capture toda la informacion!");
+                    alerta( "Capture toda la informacion!","Error");
                     //Toast.makeText(getApplicationContext(), "Capture toda la informacion!", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -236,7 +236,7 @@ public class InsReceta extends AppCompatActivity {
                     //Status 200 quiere decir que se recibio respuesta
                     if (statusCode == 200) {
                         if(responseBody != null && responseBody.length > 0) {
-                            alerta("Se registro correctamente!");
+                            alerta("Se registro correctamente!","Exito");
                             Toast.makeText(getApplicationContext(), "Se registro correctamente!", Toast.LENGTH_LONG).show();
                             editNombreRec.setText("");
                             editModoPrep.setText("");
@@ -424,14 +424,14 @@ public class InsReceta extends AppCompatActivity {
         builder.show();
     }
 
-    public void alerta(String cadena){
+    public void alerta(String cadena,String tipo){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         //seleccionamos la cadena a mostrar
         dialogBuilder.setMessage(cadena);
         dialogBuilder.setIcon(android.R.drawable.ic_dialog_info);
 
         //elegimo un titulo y configuramos para que se pueda quitar
-        dialogBuilder.setCancelable(true).setTitle("Warning");
+        dialogBuilder.setCancelable(true).setTitle(tipo);
 
         //mostramos el dialogBuilder
         dialogBuilder.create().show();

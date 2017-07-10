@@ -11,8 +11,6 @@ import android.os.StrictMode;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,7 +26,6 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -185,7 +182,6 @@ public class RecetaDetalle extends AppCompatActivity {
     }
 
 
-    @Background
     protected Bitmap LoadImageFromWeb(String imageFullURL)
     {
         Bitmap bm = null;
@@ -231,15 +227,15 @@ public class RecetaDetalle extends AppCompatActivity {
                             //Toast.makeText(getApplicationContext(), video, Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             //e.printStackTrace();
-                            alerta( "Error: " + e.getMessage());
+                            alerta( "Error: " + e.getMessage(),"Error");
                             //Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }else{
-                        alerta("No se encontraron videos!");
+                        alerta("No se encontraron videos!","Error");
                        // Toast.makeText(getApplicationContext(), "No se encontraron videos!", Toast.LENGTH_LONG).show();
                     }
                 }else{
-                    alerta("No se encontraron videos!");
+                    alerta("No se encontraron videos!","Error");
                     //Toast.makeText(getApplicationContext(), "No se encontraron videos!", Toast.LENGTH_LONG).show();
                 }
             }
@@ -249,14 +245,14 @@ public class RecetaDetalle extends AppCompatActivity {
             }
         });
     }
-    public void alerta(String cadena){
+    public void alerta(String cadena,String tipo){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         //seleccionamos la cadena a mostrar
         dialogBuilder.setMessage(cadena);
         dialogBuilder.setIcon(android.R.drawable.ic_dialog_info);
 
         //elegimo un titulo y configuramos para que se pueda quitar
-        dialogBuilder.setCancelable(true).setTitle("Warning");
+        dialogBuilder.setCancelable(true).setTitle(tipo);
 
         //mostramos el dialogBuilder
         dialogBuilder.create().show();

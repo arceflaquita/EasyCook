@@ -51,7 +51,70 @@
         android:text="Iniciar sesión"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btnSesion" />
+        android:id="@+id/btnSesion"
+        style="@android:style/Widget.Material.Button.Colored"/>
+
+    <LinearLayout
+        android:layout_width="296dp"
+        android:layout_height="89dp"
+        android:layout_marginTop="19dp"
+
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="296dp"
+            android:layout_height="74dp"
+
+            android:layout_weight="0.14"
+            android:orientation="horizontal">
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/fb_log_btn"
+                style="@style/com_facebook_button_share"
+                android:layout_width="38dp"
+                android:layout_height="45dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="19dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="296dp"
+            android:layout_height="74dp"
+            android:layout_marginLeft="50px"
+            android:layout_weight="0.14"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <com.twitter.sdk.android.core.identity.TwitterLoginButton
+                android:id="@+id/tw_log_btn"
+                style="@style/tw__TwitterLogo.Compact"
+                android:layout_width="44dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="19dp"
+                android:layout_marginLeft="30dp"
+
+                android:layout_weight="0.15" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="296dp"
+            android:layout_height="74dp"
+
+            android:layout_weight="0.14"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/SignInButton"
+                android:layout_width="38dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="15dp"
+                android:layout_weight="0.25" />
+        </LinearLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -85,55 +148,9 @@
             android:text="Recuperar password "
             android:textAlignment="center"
             android:textColor="#F50057"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            />
     </LinearLayout>
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="1">
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            />
-
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/fb_log_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"/>
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"/>
-        <com.twitter.sdk.android.core.identity.TwitterLoginButton
-            android:id="@+id/tw_log_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            />
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"/>
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/SignInButton"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"/>
-    </TableLayout>
 
 
 </LinearLayout>

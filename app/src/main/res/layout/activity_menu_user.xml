@@ -41,17 +41,19 @@
 
 
             android:id="@+id/btnBusEspecifica"
-            android:onClick="BuscarPersonalizada"
-            android:text="Busqueda Especifica"
-            android:layout_weight="1"
+            style="@android:style/Widget.Material.Button.Colored"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_width="fill_parent" />
+            android:layout_weight="1"
+            android:onClick="BuscarPersonalizada"
+            android:text="Busqueda Especifica" />
 </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
+            style="@android:style/Widget.Material.Button.Colored"
             android:text="Agregar Receta"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -68,6 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
+            style="@android:style/Widget.Material.Button.Colored"
             android:text="Busqueda Por tipo"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -85,6 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
+                style="@android:style/Widget.Material.Button.Colored"
                 android:text="Busqueda Por Nombre"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -101,6 +105,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
+                style="@android:style/Widget.Material.Button.Colored"
                 android:text="Lista Recetas"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"

@@ -79,7 +79,7 @@
         <activity android:name=".Mostrar_receta" />
         <activity android:name=".RecetaDetalle" />
         <activity android:name=".RespuestaBusquedaReceta" />
-        <activity android:name=".RecuperarPassword"></activity>
+        <activity android:name=".RecuperarPassword" />
     </application>
 
 </manifest>
