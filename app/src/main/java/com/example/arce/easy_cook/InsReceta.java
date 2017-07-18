@@ -182,8 +182,8 @@ public class InsReceta extends AppCompatActivity {
 
     public static Bitmap decodeBase64(String input)
     {
-        byte[] decodedBytes = Base64.decode(input, 0);
-        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+        byte[] decodedBytes = Base64.decode(input, 1);
+        return BitmapFactory.decodeByteArray(decodedBytes, 1, decodedBytes.length);
     }
 
     public void registrarReceta(View v) {
@@ -194,8 +194,8 @@ public class InsReceta extends AppCompatActivity {
         String url_video = editVideo.getText().toString();
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        //Bitmap bitmap = BitmapFactory.decodeFile(mPath, options);
-        String photo = encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 100);
+         bitmap = BitmapFactory.decodeFile(mPath, options);
+        String photo = encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 50);
 
 
 
@@ -271,7 +271,7 @@ public class InsReceta extends AppCompatActivity {
             isDirectoryCreated = file.mkdirs();
 
         if (isDirectoryCreated) {
-            Long timestamp = System.currentTimeMillis() / 1000;
+            Long timestamp = System.currentTimeMillis() / 700;
             String imageName = timestamp.toString() + ".jpg";
 
             mPath = Environment.getExternalStorageDirectory() + File.separator + imageName;

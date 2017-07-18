@@ -1,6 +1,7 @@
 package com.example.arce.easy_cook;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -50,6 +51,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.Objects;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpEntity;
@@ -81,6 +83,9 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
     private AuthCredential credential;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     private AccessTokenTracker accessTokenTracker ;
+    private MediaPlayer mp;
+    String userName;
+    String correo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +104,8 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
         loginButtonTw.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
-
+                userName=  result.data.getUserName();
+                correo="nose puede mostrar este dato!";
                 goMainScreen();
                 finish();
 
@@ -159,6 +165,8 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user= firebaseAuth.getCurrentUser();
                 if(user!=null){
+                    userName= user.getDisplayName();
+                    correo=user.getEmail();
                     goMainScreen();
                 }
             }
@@ -206,8 +214,19 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
 
+                try {
+                    Object name=object.get("last_name");
+                    Object corr= object.get("email");
+                    userName=String.valueOf(name);
+                    correo=String.valueOf(corr);
+                   // Toast.makeText(getApplicationContext(),"nombre:"+userName,Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(),"correo:"+correo,Toast.LENGTH_LONG).show();
+                    goMainScreen();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-               // Toast.makeText(getApplicationContext(),object.toString(),Toast.LENGTH_LONG).show();
+              //  Toast.makeText(getApplicationContext(),object.toString(),Toast.LENGTH_LONG).show();
 
             }
         });
@@ -216,13 +235,14 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
         b.putString("fields","id,email,first_name,last_name,picture.type(large)");
         request.setParameters(b);
         request.executeAsync();
-        goMainScreen();
+
     }
 
 
     private void goMainScreen() {
-        Intent intent=new Intent(Login.this,MenuUser.class);
-
+        Intent intent=new Intent(Login.this,MenuUser2.class);
+         intent.putExtra("nombreUser", userName);
+        intent.putExtra("correo", correo);
         startActivity(intent);
 
     }
@@ -243,6 +263,8 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
 
     private void handleSingnInResult(GoogleSignInResult result) {
     if(result.isSuccess()){
+        userName=result.getSignInAccount().getFamilyName();
+        correo=result.getSignInAccount().getEmail();
         goMainScreen();
     }else{
         Toast.makeText(this,R.string.error_login,Toast.LENGTH_SHORT).show();
@@ -281,16 +303,27 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
                             if(responseBody != null && responseBody.length > 0) {
                                 JSONObject res = new JSONObject(new String(responseBody));
                                 DatosUsuario datosUsuario=new DatosUsuario();
+                                String nombreUser="";
                                 Object valido = res.get("userValido");
                                 Object validoCor = res.get("correoIgual");
                                 Object correo = res.get("correo");
                                 Object idUsuario = res.get("idUsuario");
+                                Object nombre=res.get("nombre");
+                                Object ap_paterno=res.get("ap_paterno");
+                                Object ap_materno=res.get("ap_materno");
+
+                                String nom=String.valueOf(nombre);
+                                String apPat=String.valueOf(ap_paterno);
+                                String apMat=String.valueOf(ap_materno);
+                                nombreUser=nom+" "+apPat+" "+apMat;
                                 datosUsuario.setCorreo(String.valueOf(correo));
                                 datosUsuario.setIdUsuario(Integer.parseInt(idUsuario.toString()));
                                 //si el usuario es valido lo redireccionamos al Activity principal
                                 if(valido.toString().compareTo("true") == 0){
 
-                                    Intent busq = new Intent(Login.this, MenuUser.class);
+                                    Intent busq = new Intent(Login.this, MenuUser2.class);
+                                    busq.putExtra("nombreUser", nombreUser);
+                                    busq.putExtra("correo", datosUsuario.getCorreo());
                                     startActivity(busq);
                                     editEmail.setText("");
                                     editContrasena.setText("");

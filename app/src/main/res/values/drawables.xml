@@ -1,0 +1,8 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <item name="ic_menu_camera" type="drawable">Nombre:</item>
+    <item name="ic_menu_gallery" type="drawable"></item>
+    <item name="ic_menu_slideshow" type="drawable">Correo:</item>
+    <item name="ic_menu_manage" type="drawable"></item>
+    <item name="ic_menu_share" type="drawable"></item>
+    <item name="ic_menu_send" type="drawable"></item>
+</resources>

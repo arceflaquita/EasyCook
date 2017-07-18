@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -219,6 +220,9 @@ public class Busqueda extends AppCompatActivity {
             ViewGroup viewgroup = (ViewGroup)layoutInflater.inflate(R.layout.mostrar_receta_item,null);
             smartImageView = (SmartImageView)viewgroup.findViewById(R.id.imagen1);
             tvtitulo = (TextView)viewgroup.findViewById(R.id.tvtitulo);
+            String font_path = "font/Genesis Handwriting.ttf";
+            Typeface TF = Typeface.createFromAsset(getAssets(),font_path);
+            tvtitulo.setTypeface(TF);
             String urlfinal = urlImages + File.separator +  imagen.get(position).toString();
             Rect rect = new Rect(smartImageView.getLeft(),smartImageView.getTop(),smartImageView.getRight(),smartImageView.getBottom());
             smartImageView.setImageUrl(urlfinal, rect);

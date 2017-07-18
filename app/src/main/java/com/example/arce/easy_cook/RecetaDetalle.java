@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -72,6 +73,18 @@ public class RecetaDetalle extends AppCompatActivity {
         btnyotube=(Button) findViewById(R.id.youtubeReceta);
         //mWebView = (WebView) findViewById(R.id.mWebView);
         compartir=(Button)findViewById(R.id.compartir);
+
+        String font_path = "font/Genesis Handwriting.ttf";  //definimos un STRING con el valor PATH ( o ruta por                                                                                    //donde tiene que buscar ) de nuetra fuente
+
+        Typeface TF = Typeface.createFromAsset(getAssets(),font_path);
+
+        //llamanos a la CLASS TYPEFACE y la definimos con un CREATE desde                                                    //ASSETS con la ruta STRING
+
+        tvNombre.setTypeface(TF);
+        tvTipo.setTypeface(TF);
+        tvPorciones.setTypeface(TF);
+        tvIngredientes.setTypeface(TF);
+        tvPreparacion.setTypeface(TF);
         //evita error android.os.NetworkOnMainThreadException en metodo LoadImageFromWebOperations
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();

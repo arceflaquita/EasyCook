@@ -55,7 +55,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".InsReceta" />
-        <activity android:name=".MenuUser" />
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
@@ -80,6 +79,11 @@
         <activity android:name=".RecetaDetalle" />
         <activity android:name=".RespuestaBusquedaReceta" />
         <activity android:name=".RecuperarPassword" />
+        <activity
+            android:name=".MenuUser2"
+            android:label="@string/title_activity_menu_user2"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".PerfilUSer"></activity>
     </application>
 
 </manifest>

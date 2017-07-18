@@ -24,13 +24,15 @@
         <TextView
             android:id="@+id/tvNombre"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Nombre de receta"
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"
             android:textSize="30dp" />
 
         <LinearLayout
+            android:layout_marginTop="10dp"
             android:layout_width="fill_parent"
             android:layout_height="30dp"
             android:orientation="horizontal">
@@ -93,7 +95,7 @@
             android:layout_width="fill_parent"
             android:layout_height="30dp"
             android:hint="Ingredientes"
-            android:text="Preparacion: "
+            android:text="Preparación: "
             android:textColor="@color/colorPrimary" />
 
         <TextView
