@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -195,7 +196,27 @@ public class InsReceta extends AppCompatActivity {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
          bitmap = BitmapFactory.decodeFile(mPath, options);
-        String photo = encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 50);
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int newWidth = 1500;
+        int newHeight = 1000;
+
+        // calculamos el escalado de la imagen destino
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+
+        // para poder manipular la imagen
+        // debemos crear una matriz
+
+        Matrix matrix = new Matrix();
+        // resize the Bitmap
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // volvemos a crear la imagen con los nuevos valores
+        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
+                width, height, matrix, true);
+
+        String photo = encodeToBase64(resizedBitmap, Bitmap.CompressFormat.JPEG, 50);
 
 
 
@@ -277,7 +298,11 @@ public class InsReceta extends AppCompatActivity {
             mPath = Environment.getExternalStorageDirectory() + File.separator + imageName;
 
             File newFile = new File(mPath);
+
+
+
             bitmap = BitmapFactory.decodeFile(mPath);
+
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(newFile));
             startActivityForResult(intent, PHOTO_CODE);
@@ -301,6 +326,26 @@ public class InsReceta extends AppCompatActivity {
                                 }
                             });
                     bitmap = BitmapFactory.decodeFile(mPath);
+                    int width = bitmap.getWidth();
+                    int height = bitmap.getHeight();
+                    int newWidth = 1500;
+                    int newHeight = 1000;
+
+                    // calculamos el escalado de la imagen destino
+                    float scaleWidth = ((float) newWidth) / width;
+                    float scaleHeight = ((float) newHeight) / height;
+
+                    // para poder manipular la imagen
+                    // debemos crear una matriz
+
+                    Matrix matrix = new Matrix();
+                    // resize the Bitmap
+                    matrix.postScale(scaleWidth, scaleHeight);
+
+                    // volvemos a crear la imagen con los nuevos valores
+                    Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
+                            width, height, matrix, true);
+                    bitmap=resizedBitmap;
                     mSetImage.setImageBitmap(bitmap);
                     break;
                 case SELECT_PICTURE:
