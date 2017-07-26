@@ -16,8 +16,8 @@ android:orientation="vertical" >
     <ListView
         android:id="@+id/listRec"
         style="@style/Widget.AppCompat.ListView.Menu"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:cacheColorHint="@color/cardview_dark_background" />
 
 </LinearLayout>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.arce.easy_cook.Mostrar_receta">
 
-    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ListView
         android:id="@+id/listaRecetas"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

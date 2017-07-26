@@ -85,7 +85,7 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
     private AccessTokenTracker accessTokenTracker ;
     private MediaPlayer mp;
     String userName;
-    String correo;
+    String correo,inicio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +106,7 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
             public void success(Result<TwitterSession> result) {
                 userName=  result.data.getUserName();
                 correo="nose puede mostrar este dato!";
+                inicio="Twitter";
                 goMainScreen();
                 finish();
 
@@ -167,6 +168,7 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
                 if(user!=null){
                     userName= user.getDisplayName();
                     correo=user.getEmail();
+                    inicio="Google";
                     goMainScreen();
                 }
             }
@@ -219,6 +221,7 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
                     Object corr= object.get("email");
                     userName=String.valueOf(name);
                     correo=String.valueOf(corr);
+                    inicio="Facebook";
                    // Toast.makeText(getApplicationContext(),"nombre:"+userName,Toast.LENGTH_LONG).show();
                     //Toast.makeText(getApplicationContext(),"correo:"+correo,Toast.LENGTH_LONG).show();
                     goMainScreen();
@@ -243,6 +246,7 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
         Intent intent=new Intent(Login.this,MenuUser2.class);
          intent.putExtra("nombreUser", userName);
         intent.putExtra("correo", correo);
+        intent.putExtra("inicio", inicio);
         startActivity(intent);
 
     }
@@ -324,6 +328,7 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
                                     Intent busq = new Intent(Login.this, MenuUser2.class);
                                     busq.putExtra("nombreUser", nombreUser);
                                     busq.putExtra("correo", datosUsuario.getCorreo());
+                                    busq.putExtra("inicio", "Usuario de Easy-Cook");
                                     startActivity(busq);
                                     editEmail.setText("");
                                     editContrasena.setText("");

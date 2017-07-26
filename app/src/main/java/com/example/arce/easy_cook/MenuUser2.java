@@ -25,7 +25,7 @@ public class MenuUser2 extends AppCompatActivity
     Button btnAgregar;
     Button btnBusqueda,btnBusquedaNombre;
     Button btnMostrarReceta;
-    String nombre,correo;
+    String nombre,correo,inicio;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +53,7 @@ public class MenuUser2 extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         nombre= getIntent().getStringExtra("nombreUser");
-
+        inicio= getIntent().getStringExtra("inicio");
 
 
 
@@ -85,7 +85,9 @@ public class MenuUser2 extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent intent = new Intent(MenuUser2.this, Login.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -100,6 +102,7 @@ public class MenuUser2 extends AppCompatActivity
             Intent busq = new Intent(MenuUser2.this , PerfilUSer.class);
             busq.putExtra("nombreUser", nombre);
             busq.putExtra("correo",correo);
+            busq.putExtra("inicio",inicio);
             startActivity(busq);
         }
 
