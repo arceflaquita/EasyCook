@@ -32,6 +32,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.arce.easy_cook.DatosUsuario.DatosUsuario;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -96,6 +97,9 @@ public class InsReceta extends AppCompatActivity {
         arrayList = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList);
         listIng.setAdapter(adapter);
+
+
+        //Toast.makeText(getApplicationContext(), "id_usuario:"+DatosUsuario.getIdUsuario(), Toast.LENGTH_LONG).show();
 
         ArrayAdapter<CharSequence> tipo_comida_adap = ArrayAdapter.createFromResource(this,
                 R.array.tipo_comida_arr, android.R.layout.simple_spinner_item);
@@ -188,6 +192,7 @@ public class InsReceta extends AppCompatActivity {
     }
 
     public void registrarReceta(View v) {
+
         String nombre = editNombreRec.getText().toString();
         String preparacion = editModoPrep.getText().toString();
         String tipo_comida = String.valueOf(spnTipoComida.getSelectedItemPosition()+1);
@@ -198,8 +203,8 @@ public class InsReceta extends AppCompatActivity {
          bitmap = BitmapFactory.decodeFile(mPath, options);
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
-        int newWidth = 1500;
-        int newHeight = 1000;
+        int newWidth = 668;
+        int newHeight = 400;
 
         // calculamos el escalado de la imagen destino
         float scaleWidth = ((float) newWidth) / width;
@@ -221,14 +226,14 @@ public class InsReceta extends AppCompatActivity {
 
 
         JSONObject jo = new JSONObject();
-        DatosUsuario datosUsuario=new DatosUsuario();
+
         try {
             jo.put("nombre", nombre);
             jo.put("preparacion", preparacion);
             jo.put("tipo_comida", tipo_comida);
             jo.put("url_video", url_video);
             jo.put("porciones", porciones);
-            jo.put("id_usuario", datosUsuario.getIdUsuario());
+            jo.put("id_usuario", DatosUsuario.getIdUsuario());
             jo.put("image", photo);
             JSONArray ja = new JSONArray();
             ArrayAdapter<String> adapter = (ArrayAdapter<String>) listIng.getAdapter();
@@ -328,8 +333,8 @@ public class InsReceta extends AppCompatActivity {
                     bitmap = BitmapFactory.decodeFile(mPath);
                     int width = bitmap.getWidth();
                     int height = bitmap.getHeight();
-                    int newWidth = 1500;
-                    int newHeight = 1000;
+                    int newWidth = 668;
+                    int newHeight = 400;
 
                     // calculamos el escalado de la imagen destino
                     float scaleWidth = ((float) newWidth) / width;

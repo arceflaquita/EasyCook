@@ -1,12 +1,12 @@
-package com.example.arce.easy_cook;
+package com.example.arce.easy_cook.DatosUsuario;
 
 /**
  * Created by SNOOPY on 18/05/2017.
  */
 
 public class DatosUsuario {
+    private static int idUsuario;
     private String correo;
-    private int idUsuario;
 
     public String getCorreo() {
         return correo;
@@ -16,7 +16,7 @@ public class DatosUsuario {
         this.correo = correo;
     }
 
-    public int getIdUsuario() {
+    public static int getIdUsuario() {
         return idUsuario;
     }
 

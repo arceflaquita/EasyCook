@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.arce.easy_cook.DatosUsuario.DatosUsuario;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -47,7 +48,7 @@ public class RecetaDetalle extends AppCompatActivity {
     TextView tvIngredientes;
     TextView tvPreparacion;
     WebView mWebView;
-    Button compartir;
+    Button compartir,recetaFavorita;
     private Button btnyotube;
 
     String urlREST = "";
@@ -73,6 +74,7 @@ public class RecetaDetalle extends AppCompatActivity {
         btnyotube=(Button) findViewById(R.id.youtubeReceta);
         //mWebView = (WebView) findViewById(R.id.mWebView);
         compartir=(Button)findViewById(R.id.compartir);
+        recetaFavorita=(Button)findViewById(R.id.btnFavorita);
 
         String font_path = "font/Genesis Handwriting.ttf";  //definimos un STRING con el valor PATH ( o ruta por                                                                                    //donde tiene que buscar ) de nuetra fuente
 
@@ -90,6 +92,12 @@ public class RecetaDetalle extends AppCompatActivity {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
+        recetaFavorita.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                recetaFavorita(id_rec);
+            }
+            });
         compartir.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -141,6 +149,7 @@ public class RecetaDetalle extends AppCompatActivity {
         JSONObject jo = new JSONObject();
         try {
             jo.put("id", id_rec);
+            jo.put("id_usuario", DatosUsuario.getIdUsuario());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -172,6 +181,10 @@ public class RecetaDetalle extends AppCompatActivity {
                             tvPorciones.setText(json.getString("porciones"));
                             tvPreparacion.setText(json.getString("preparacion"));
                             urlVideo = json.getString("url_video");
+                            if(json.getBoolean("favoritaUser")){
+                                recetaFavorita.setVisibility(View.INVISIBLE);
+                            }else{
+                                recetaFavorita.setVisibility(View.VISIBLE);}
                             JSONArray ings = json.getJSONArray("ingredientes");
                             for (int i=0; i < ings.length(); i++){
                                 tvIngredientes.setText(tvIngredientes.getText() + ings.getJSONObject(i).getString("nombre"));
@@ -271,4 +284,56 @@ public class RecetaDetalle extends AppCompatActivity {
         dialogBuilder.create().show();
 
     }
+
+    private void recetaFavorita(String id_rec) {
+        final ProgressDialog progressDialog = new ProgressDialog(RecetaDetalle.this);
+        progressDialog.setMessage("Cargando Datos.....");
+        progressDialog.show();
+        JSONObject jo = new JSONObject();
+        try {
+            jo.put("id", id_rec);
+            jo.put("id_usuario", DatosUsuario.getIdUsuario());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        AsyncHttpClient ac = new AsyncHttpClient();
+        HttpEntity entity = null;
+        try {
+            entity = new StringEntity(jo.toString());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String url = urlREST + "/agregarFavorita";
+        ac.post(this, url, entity, "application/json", new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                try {
+                    //Status 200 quiere decir que se recibio respuesta
+                    if (statusCode == 200) {
+                        progressDialog .dismiss();
+                        if(responseBody != null && responseBody.length > 0) {
+                            JSONObject json = new JSONObject(new String(responseBody));
+
+                            if(json.getBoolean("favoritaUser")){
+                                recetaFavorita.setVisibility(View.INVISIBLE);
+                            }else{
+                                recetaFavorita.setVisibility(View.VISIBLE);}
+
+
+
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Error: ", Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(getApplicationContext(), "Error onFailure: " + String.valueOf(statusCode) + " : " + error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
 }

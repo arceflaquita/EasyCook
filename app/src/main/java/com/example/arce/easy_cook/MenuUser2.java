@@ -26,6 +26,7 @@ public class MenuUser2 extends AppCompatActivity
     Button btnBusqueda,btnBusquedaNombre;
     Button btnMostrarReceta;
     String nombre,correo,inicio;
+    String idUsuario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +37,7 @@ public class MenuUser2 extends AppCompatActivity
 
 
        correo= getIntent().getStringExtra("correo");
+        idUsuario=getIntent().getStringExtra("id_usuario");
         btnBusquedaEspecifica= (Button)findViewById(R.id.btnBusEspecifica);
         btnAgregar= (Button)findViewById(R.id.btnAgregar);
         btnBusqueda= (Button)findViewById(R.id.btnBusqueda);
@@ -103,6 +105,7 @@ public class MenuUser2 extends AppCompatActivity
             busq.putExtra("nombreUser", nombre);
             busq.putExtra("correo",correo);
             busq.putExtra("inicio",inicio);
+            busq.putExtra("id_usuario", idUsuario);
             startActivity(busq);
         }
 

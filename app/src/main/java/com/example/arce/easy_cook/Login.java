@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.arce.easy_cook.DatosUsuario.DatosUsuario;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -51,7 +52,6 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
-import java.util.Objects;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpEntity;
@@ -86,6 +86,7 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
     private MediaPlayer mp;
     String userName;
     String correo,inicio;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,7 +169,7 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
                 if(user!=null){
                     userName= user.getDisplayName();
                     correo=user.getEmail();
-                    inicio="Google";
+                    inicio="Google +";
                     goMainScreen();
                 }
             }
@@ -269,6 +270,7 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
     if(result.isSuccess()){
         userName=result.getSignInAccount().getFamilyName();
         correo=result.getSignInAccount().getEmail();
+        inicio="Google";
         goMainScreen();
     }else{
         Toast.makeText(this,R.string.error_login,Toast.LENGTH_SHORT).show();
@@ -278,6 +280,7 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
     public void loginUser(View view) {
         String user = editEmail.getText().toString();
         String passwd = editContrasena.getText().toString();
+
         if(user.compareTo("") != 0 && passwd.compareTo("") != 0){
             JSONObject jo = new JSONObject();
             try {
@@ -301,12 +304,12 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     try {
 
-
+                        DatosUsuario dato= new DatosUsuario();
                         //Status 200 quiere decir que se recibio respuesta
                         if (statusCode == 200) {
                             if(responseBody != null && responseBody.length > 0) {
                                 JSONObject res = new JSONObject(new String(responseBody));
-                                DatosUsuario datosUsuario=new DatosUsuario();
+
                                 String nombreUser="";
                                 Object valido = res.get("userValido");
                                 Object validoCor = res.get("correoIgual");
@@ -320,15 +323,17 @@ public class Login extends AppCompatActivity implements  GoogleApiClient.OnConne
                                 String apPat=String.valueOf(ap_paterno);
                                 String apMat=String.valueOf(ap_materno);
                                 nombreUser=nom+" "+apPat+" "+apMat;
-                                datosUsuario.setCorreo(String.valueOf(correo));
-                                datosUsuario.setIdUsuario(Integer.parseInt(idUsuario.toString()));
+                                dato.setCorreo(String.valueOf(correo));
+                                dato.setIdUsuario(Integer.parseInt(idUsuario.toString()));
+
                                 //si el usuario es valido lo redireccionamos al Activity principal
                                 if(valido.toString().compareTo("true") == 0){
 
                                     Intent busq = new Intent(Login.this, MenuUser2.class);
                                     busq.putExtra("nombreUser", nombreUser);
-                                    busq.putExtra("correo", datosUsuario.getCorreo());
+                                    busq.putExtra("correo",  dato.getCorreo());
                                     busq.putExtra("inicio", "Usuario de Easy-Cook");
+                                    busq.putExtra("id_usuario", idUsuario.toString());
                                     startActivity(busq);
                                     editEmail.setText("");
                                     editContrasena.setText("");
