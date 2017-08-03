@@ -181,10 +181,15 @@ public class RecetaDetalle extends AppCompatActivity {
                             tvPorciones.setText(json.getString("porciones"));
                             tvPreparacion.setText(json.getString("preparacion"));
                             urlVideo = json.getString("url_video");
-                            if(json.getBoolean("favoritaUser")){
+                            if(DatosUsuario.getIdUsuario()==0){
                                 recetaFavorita.setVisibility(View.INVISIBLE);
-                            }else{
-                                recetaFavorita.setVisibility(View.VISIBLE);}
+                            }else {
+                                if (json.getBoolean("favoritaUser")) {
+                                    recetaFavorita.setVisibility(View.INVISIBLE);
+                                } else {
+                                    recetaFavorita.setVisibility(View.VISIBLE);
+                                }
+                            }
                             JSONArray ings = json.getJSONArray("ingredientes");
                             for (int i=0; i < ings.length(); i++){
                                 tvIngredientes.setText(tvIngredientes.getText() + ings.getJSONObject(i).getString("nombre"));
