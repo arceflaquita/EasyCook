@@ -3,8 +3,8 @@
     <string name="search_hint">Buscar receta...</string>
     <!--<string name="urlREST">http://100.78.86.159:8080/RestEC/services/EasyCook</string>-->
     <!--<string name="urlREST">http://192.168.43.128:8080/RestEC/services/EasyCook</string>-->
-    <string name="urlREST">http://192.168.0.10:8080/RestEC/services/EasyCook</string>
-    <string name="urlImages">http://192.168.0.10:8080/RestEC/images</string>
+    <string name="urlREST">http://192.168.1.79:8080/RestEC/services/EasyCook</string>
+    <string name="urlImages">http://192.168.1.79:8080/RestEC/images</string>
     <string-array name="tipo_comida_arr">
         <item>Tipo Comida</item>
         <item>Desayuno</item>
